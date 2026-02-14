@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 import {IProtocolAddressProvider} from "../interfaces/core/IProtocolAddressProvider.sol";
+import {Errors} from "../libraries/Errors.sol";
 
 /**
  * @title ProtocolAddressProvider
@@ -49,7 +50,7 @@ contract ProtocolAddressProvider is Ownable2Step, IProtocolAddressProvider {
      * @param owner_ Initial owner address (DAO multisig).
      */
     constructor(address owner_) Ownable(owner_) {
-        if (owner_ == address(0)) revert InvalidOwner(owner_);
+        if (owner_ == address(0)) revert Errors.InvalidOwner(owner_);
         _setAddress(KEY_ADDRESS_PROVIDER, address(this));
     }
 
@@ -98,43 +99,43 @@ contract ProtocolAddressProvider is Ownable2Step, IProtocolAddressProvider {
 
     /// @inheritdoc IProtocolAddressProvider
     function setPriceOracle(address newOracle) external override onlyOwner {
-        if (newOracle == address(0)) revert ZeroAddress(KEY_ORACLE);
+        if (newOracle == address(0)) revert Errors.ZeroAddress(KEY_ORACLE);
         _setAddress(KEY_ORACLE, newOracle);
     }
 
     /// @inheritdoc IProtocolAddressProvider
     function setAssetWhitelist(address newWhitelist) external override onlyOwner {
-        if (newWhitelist == address(0)) revert ZeroAddress(KEY_WHITELIST);
+        if (newWhitelist == address(0)) revert Errors.ZeroAddress(KEY_WHITELIST);
         _setAddress(KEY_WHITELIST, newWhitelist);
     }
 
     /// @inheritdoc IProtocolAddressProvider
     function setFactory(address newFactory) external override onlyOwner {
-        if (newFactory == address(0)) revert ZeroAddress(KEY_FACTORY);
+        if (newFactory == address(0)) revert Errors.ZeroAddress(KEY_FACTORY);
         _setAddress(KEY_FACTORY, newFactory);
     }
 
     /// @inheritdoc IProtocolAddressProvider
     function setVaultBeacon(address newBeacon) external override onlyOwner {
-        if (newBeacon == address(0)) revert ZeroAddress(KEY_VAULT_BEACON);
+        if (newBeacon == address(0)) revert Errors.ZeroAddress(KEY_VAULT_BEACON);
         _setAddress(KEY_VAULT_BEACON, newBeacon);
     }
 
     /// @inheritdoc IProtocolAddressProvider
     function setGuardian(address newGuardian) external override onlyOwner {
-        if (newGuardian == address(0)) revert ZeroAddress(ROLE_GUARDIAN);
+        if (newGuardian == address(0)) revert Errors.ZeroAddress(ROLE_GUARDIAN);
         _setAddress(ROLE_GUARDIAN, newGuardian);
     }
 
     /// @inheritdoc IProtocolAddressProvider
     function setRiskAdmin(address newRiskAdmin) external override onlyOwner {
-        if (newRiskAdmin == address(0)) revert ZeroAddress(ROLE_RISK_ADMIN);
+        if (newRiskAdmin == address(0)) revert Errors.ZeroAddress(ROLE_RISK_ADMIN);
         _setAddress(ROLE_RISK_ADMIN, newRiskAdmin);
     }
 
     /// @inheritdoc IProtocolAddressProvider
     function setTreasury(address newTreasury) external override onlyOwner {
-        if (newTreasury == address(0)) revert ZeroAddress(ROLE_TREASURY);
+        if (newTreasury == address(0)) revert Errors.ZeroAddress(ROLE_TREASURY);
         _setAddress(ROLE_TREASURY, newTreasury);
     }
 

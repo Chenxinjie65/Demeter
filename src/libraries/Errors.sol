@@ -36,5 +36,16 @@ library Errors {
 
     /// @dev Thrown when grace period is not over after sequencer recovery.
     error GracePeriodNotOver();
+
+    // -------------------------------------------------------------------------
+    // Protocol Address Provider Errors
+    // -------------------------------------------------------------------------
+
+    /// @dev Thrown when trying to initialize or transfer ownership to the zero address.
+    error InvalidOwner(address owner);
+
+    /// @dev Thrown when attempting to set a registry entry to the zero address.
+    /// @param key Identifier of the address being set (e.g. KEY_ORACLE, ROLE_GUARDIAN).
+    error ZeroAddress(bytes32 key);
 }
 
