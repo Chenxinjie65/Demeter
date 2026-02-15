@@ -47,5 +47,18 @@ library Errors {
     /// @dev Thrown when attempting to set a registry entry to the zero address.
     /// @param key Identifier of the address being set (e.g. KEY_ORACLE, ROLE_GUARDIAN).
     error ZeroAddress(bytes32 key);
+
+    // -------------------------------------------------------------------------
+    // Asset Whitelist Errors
+    // -------------------------------------------------------------------------
+
+    /// @dev Thrown when attempting to add or check an asset that is the zero address.
+    error AssetIsZero();
+
+    /// @dev Thrown when attempting to add an asset that is already whitelisted.
+    error AssetAlreadyWhitelisted();
+
+    /// @dev Thrown when attempting to remove an asset that is not whitelisted.
+    error AssetNotWhitelisted();
 }
 
