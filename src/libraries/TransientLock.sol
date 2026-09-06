@@ -2,94 +2,75 @@
 pragma solidity ^0.8.24;
 
 /**
- * @title TransientLock
- * @notice Reentrancy lock implemented with EIP-1153 transient storage (tstore/tload).
+ * @title TransientReentrancyGuard
+ * @notice Abstract contract providing a transient-storage-based reentrancy guard (EIP-1153).
  *
  * @dev
- * This is an Uniswap v4-inspired pattern:
- * - The lock state lives in transient storage, so it is cleared automatically at the end
- *   of each transaction.
- * - Useful for "unlock -> callback -> invariant checks -> lock" workflows where you want
- *   a controlled reentrancy window.
- *
  * Semantics:
- * - "locked"   = false stored in the slot (default for a new transaction)
- * - "unlocked" = true  stored in the slot
- *
- * Typical usage:
- * - At the start of an entrypoint:
- *     TransientLock.requireLocked();
- *     TransientLock.unlock();
- *     // external callback(s)
- *     // invariant checks
- *     TransientLock.lock();
- *
- * - For functions only callable during the unlock window:
- *     TransientLock.requireUnlocked();
+ * - 0 stored in the slot (default) = NOT_ENTERED
+ * - 1 stored in the slot = ENTERED
  */
-library TransientLock {
+abstract contract TransientReentrancyGuard {
+    // -------------------------------------------------------------------------
+    // Constants
+    // -------------------------------------------------------------------------
+
+    bytes32 private constant ENTERED_SLOT =
+        0x6325455a59c6b575f9e35d6d111183b7862e69f351655848508239db9458ce4d;
+
+    uint256 private constant NOT_ENTERED = 0;
+    uint256 private constant ENTERED = 1;
+
     // -------------------------------------------------------------------------
     // Errors
     // -------------------------------------------------------------------------
 
-    /// @dev Thrown when trying to unlock while already unlocked.
-    error AlreadyUnlocked();
-
-    /// @dev Thrown when trying to lock while already locked.
-    error AlreadyLocked();
-
-    /// @dev Thrown when a function requires the contract to be unlocked.
-    error NotUnlocked();
-
-    /// @dev Thrown when a function requires the contract to be locked.
-    error NotLocked();
+    /// @dev Thrown when a nonReentrant function is re-entered.
+    error ReentrancyGuard__Reentrant();
 
     // -------------------------------------------------------------------------
-    // Transient slot
+    // Modifiers
     // -------------------------------------------------------------------------
 
     /**
-     * @dev Slot holding the unlocked state, transiently.
-     * bytes32(uint256(keccak256("demeter.transient.lock.unlocked")) - 1)
+     * @dev Prevents a contract from calling itself, directly or indirectly.
      */
-    bytes32 internal constant IS_UNLOCKED_SLOT =
-        0x6325455a59c6b575f9e35d6d111183b7862e69f351655848508239db9458ce4d;
+    modifier nonReentrant() {
+        bool isEntered;
+        assembly {
+            isEntered := tload(ENTERED_SLOT)
+        }
 
-    // -------------------------------------------------------------------------
-    // Core operations
-    // -------------------------------------------------------------------------
+        if (isEntered) {
+            revert ReentrancyGuard__Reentrant();
+        }
 
-    function unlock() internal {
-        if (isUnlocked()) revert AlreadyUnlocked();
-        assembly ("memory-safe") {
-            tstore(IS_UNLOCKED_SLOT, 1)
+        assembly {
+            tstore(ENTERED_SLOT, ENTERED)
+        }
+
+        _;
+
+        assembly {
+            tstore(ENTERED_SLOT, NOT_ENTERED)
         }
     }
 
-    function lock() internal {
-        if (!isUnlocked()) revert AlreadyLocked();
-        assembly ("memory-safe") {
-            tstore(IS_UNLOCKED_SLOT, 0)
+    /**
+     * @dev Prevents read-only reentrancy attacks.
+     * Use this on view functions like `totalAUM()` or `navPerShare()`
+     * so external protocols cannot read a manipulated intermediate state.
+     */
+    modifier nonReentrantView() {
+        bool isEntered;
+        assembly {
+            isEntered := tload(ENTERED_SLOT)
         }
-    }
 
-    function isUnlocked() internal view returns (bool unlocked) {
-        assembly ("memory-safe") {
-            unlocked := tload(IS_UNLOCKED_SLOT)
+        if (isEntered) {
+            revert ReentrancyGuard__Reentrant();
         }
-    }
 
-    // -------------------------------------------------------------------------
-    // Preconditions
-    // -------------------------------------------------------------------------
-
-    function requireUnlocked() internal view {
-        if (!isUnlocked()) revert NotUnlocked();
-    }
-
-    function requireLocked() internal view {
-        if (isUnlocked()) revert NotLocked();
+        _;
     }
 }
-
-

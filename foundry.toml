@@ -1,0 +1,36 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc = "0.8.33"
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+
+# via-IR 优化器；80 runs keeps the immutable auction module under its reviewed
+# runtime-size budget while retaining optimizer coverage for production builds.
+optimizer = true
+optimizer_runs = 80
+via_ir = true
+
+# 必须设置为 cancun，否则 EIP-1153 (瞬态存储 TSTORE) 无法编译！
+evm_version = "cancun"
+
+[rpc_endpoints]
+mainnet = "${MAINNET_RPC_URL}"
+sepolia = "${SEPOLIA_RPC_URL}"
+
+[profile.default.rpc_storage_caching]
+tiers = "all"
+
+[invariant]
+runs = 256
+depth = 64
+fail_on_revert = false
+
+[profile.release.invariant]
+runs = 2000
+depth = 100
+fail_on_revert = false
+
+[profile.release.fuzz]
+runs = 10000

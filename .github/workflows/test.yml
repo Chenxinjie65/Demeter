@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  check:
+    name: Foundry project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Show Forge version
+        run: |
+          forge --version
+
+      - name: Run Forge fmt
+        run: |
+          bash script/v2/check-format.sh
+        id: fmt
+
+      - name: Run Forge build
+        run: |
+          forge build --sizes
+        id: build
+
+      - name: Enforce V2 contract size budgets
+        run: |
+          bash script/v2/check-contract-sizes.sh
+
+      - name: Install Slither
+        run: |
+          python3 -m pip install --disable-pip-version-check slither-analyzer==0.11.3
+
+      - name: Run V2 Slither gate
+        run: |
+          bash script/v2/check-slither.sh
+
+      - name: Run Forge tests
+        run: |
+          forge test -vvv
+        id: test
+
+      - name: Run V2 release invariants
+        env:
+          FOUNDRY_PROFILE: release
+        run: |
+          forge test --match-path 'test/v2/invariants/**' -vv
+
+      - name: Run V2 release arithmetic fuzz
+        env:
+          FOUNDRY_PROFILE: release
+        run: |
+          forge test --match-path 'test/v2/libraries/V2Math.t.sol' -vv
+
+      - name: Check whitespace
+        run: |
+          git diff --check
