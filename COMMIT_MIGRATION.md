@@ -6,7 +6,7 @@ temporary Git mirror and exported as `demeter-v2-commit.bundle`.
 Commit:
 
 ```text
-7b81f044d60d8e6e4023f016e306de6e508ca83c
+0c60d4631f4464040bc5cba464db33c5d7bbbb16
 ```
 
 After the repository `.git` directory is writable, import and fast-forward the
@@ -14,7 +14,7 @@ branch with:
 
 ```bash
 git fetch ./demeter-v2-commit.bundle \
-  7b81f044d60d8e6e4023f016e306de6e508ca83c:refs/heads/redesign_v2_singleton
+  0c60d4631f4464040bc5cba464db33c5d7bbbb16:refs/heads/redesign_v2_singleton
 git switch redesign_v2_singleton
 ```
 
