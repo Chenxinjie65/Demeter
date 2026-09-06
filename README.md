@@ -34,6 +34,7 @@ V2 is being redesigned around:
 - [V2 Static Analysis Triage](docs/STATIC_ANALYSIS_V2.md)
 - [V2 Incident Runbook](docs/INCIDENT_RUNBOOK_V2.md)
 - [V2 Release Evidence](docs/RELEASE_EVIDENCE_V2.md)
+- [Commit Migration](COMMIT_MIGRATION.md)
 
 Chinese mirrors: [architecture](docs/zh/ARCHITECTURE_V2_ZH.md),
 [roadmap](docs/zh/ROADMAP_V2_ZH.md), [implementation plan](docs/zh/IMPLEMENTATION_PLAN_V2_ZH.md),
