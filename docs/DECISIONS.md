@@ -1,245 +1,13 @@
-# Demeter — Architecture Decision Log
+# Demeter V2 Architecture Decision Log
 
 [中文](zh/DECISIONS_ZH.md)
 
-> This file records architectural decisions made during development, with emphasis
-> on cases where an initial approach was **rejected** in favour of a better one.
-> Understanding *why* a design was changed is as important as knowing what was chosen.
->
-> Status note: DEC-001 through DEC-012 record the legacy Factory/Beacon/Vault
-> prototype. They are historical reference, not canonical V2 design. DEC-013
-> and later define the auction-based index-fund architecture approved on
+This log records the canonical architectural decisions for the V2 singleton index-fund protocol.
+Rejected alternatives are retained only when they explain a current security or product boundary.
 
 ---
 
-## DEC-001 — Anti-ERC-4626: In-Kind Basket Model
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Considered
-Implementing the vault as an ERC-4626 tokenised vault with a single base asset (e.g. USDC).
-
-### Rejected because
-ERC-4626 requires converting all deposits into a single denominator. For a multi-asset index vault this introduces:
-1. **Oracle-latency arbitrage** — any price movement between oracle update and deposit/withdrawal can be exploited.
-2. **Forced swap slippage** — converting basket assets to/from a base asset imposes a cost on every user.
-3. **Misaligned incentives** — users join/exit with the full basket, not a single currency.
-
-### Chosen
-Strict in-kind proportional basket model:
-- `depositMulti()` — caller supplies all basket assets in exact stored-reserve
-  ratios.
-- `withdrawMulti()` — caller receives all basket assets proportionally to their share.
-- No forced conversion; no base-asset denominator.
-- `DemeterRouter` provides single-asset UX on top without modifying vault semantics.
-
----
-
-## DEC-002 — Flash Accounting via EIP-1153 (Transient Storage)
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Considered
-Using regular `SSTORE`/`SLOAD` for mid-transaction balance tracking, or a reentrancy mutex stored in regular storage.
-
-### Rejected because
-- `SSTORE` costs ~20,000 gas on a cold slot write.
-- Per-asset delta tracking requires multiple storage writes per deposit/withdrawal.
-- Regular storage must be explicitly reset, creating cleanup risk if execution reverts mid-flow.
-
-### Chosen
-EIP-1153 transient storage (`TSTORE`/`TLOAD`) — ~100 gas per operation, automatically cleared at transaction end:
-- `TransientLock.sol` — transient reentrancy guard.
-- `FlashAccounting.sol` — per-asset deltas tracked as transient state; all deltas must net to zero before the lock closes.
-- Voucher-confirm pattern: `flashSub` before transfer, `flashAdd` after — atomically verified.
-- **Requires** `evm_version = "cancun"` in `foundry.toml`.
-
----
-
-## DEC-003 — Virtual Offset vs Dead Shares for Inflation Defence
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Considered
-**Option A: Dead shares** — mint a small number of shares to `address(0)` on first deposit (OpenZeppelin ERC-4626 v4 approach).
-
-**Option B: Virtual offset** — add phantom amounts to the share/AUM totals in all calculations without minting anything.
-
-### Rejected (Option A) because
-Dead shares require a special first-deposit code path, complicate the share accounting, and leave a non-zero `totalSupply` that must be accounted for in fee calculations.
-
-### Chosen (Option B)
-Virtual offset with `VIRTUAL_SHARES = 1e10` and `VIRTUAL_AUM = 1`:
-```
-sharesToMint = amount × (totalShares + VIRTUAL_SHARES) / (totalAUM + VIRTUAL_AUM)
-```
-- Eliminates first-deposit inflation attacks.
-- Anchors initial share price at ~1 USD/share.
-- No special case needed; formula is uniform across all deposits.
-- Zero tokens minted to `address(0)`.
-
----
-
-## DEC-004 — Beacon Proxy vs UUPS vs Transparent Proxy
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Considered
-- **UUPS** — upgrade logic in the implementation.
-- **Transparent Proxy** — upgrade logic in the proxy; admin vs user slots.
-- **Beacon Proxy** — all proxies share one `UpgradeableBeacon`; upgrading the beacon upgrades all vaults atomically.
-
-### Chosen
-Beacon Proxy (`UpgradeableBeacon` + `BeaconProxy`):
-- Factory can create unlimited vaults; all share the same implementation.
-- A single `upgradeTo()` call on the beacon upgrades every vault simultaneously.
-- `VaultStorage` uses ERC-7201 namespaced storage slot to prevent collisions.
-- `__gap[37]` reserved for future fields.
-
----
-
-## DEC-005 — Buffer Ratio: 10% Idle / 90% Deployed
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Rationale
-Aave V3 at 100% utilisation cannot service withdrawals — the pool `revert`s. A liquidity buffer in the vault itself ensures small withdrawals are always serviceable without touching Aave. 10% was chosen as a conservative default that minimises yield drag while providing meaningful liquidity.
-
-`DEFAULT_BUFFER_RATIO_BPS = 1000` (10%)
-
-**Post-deploy**: large vaults should evaluate their own optimal buffer based on expected withdrawal frequency and Aave utilisation trends.
-
----
-
-## DEC-006 — Rounding Convention: Both Directions Round DOWN
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Rationale
-Both `depositMulti` (shares minted) and `withdrawMulti` (assets returned) round DOWN:
-- **Shares minted** round DOWN → users receive slightly fewer shares → vault benefits.
-- **Assets returned** round DOWN → users receive slightly fewer tokens → vault retains dust.
-
-This is the "vault-favourable" convention used by ERC-4626 and Morpho. It prevents rounding-based value extraction attacks where a user repeatedly deposits/withdraws to drain rounding remainders.
-
----
-
-## DEC-007 — One AaveV3Adapter Per Vault (Critical Design Fix)
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Original (incorrect) design
-One shared `AaveV3Adapter` instance used by all vaults. `deposit()` called `pool.supply(..., onBehalfOf = msg.sender)` — the vault received the aTokens. `getBalance()` returned `aToken.balanceOf(owner)` where `owner` = the vault address.
-
-### Why it was rejected
-Aave V3's `pool.withdraw(asset, amount, to)` **burns aTokens from `msg.sender`** (the caller). If the adapter calls `pool.withdraw`, Aave burns from `address(adapter)`. But in the original design the adapter held zero aTokens (they were minted to the vault). Every real-Aave withdrawal would revert with insufficient aToken balance.
-
-This was not caught during the architecture phase because the mock pool did not enforce aToken ownership — it simply transferred from the caller's balance.
-
-### Chosen
-One adapter instance per vault. The adapter itself holds the aTokens:
-```solidity
-// deposit:
-pool.supply(asset, amount, address(this), 0);  // adapter holds aTokens
-
-// getBalance (owner param accepted but unused):
-balance = IERC20(aToken).balanceOf(address(this));
-```
-- `pool.withdraw` burns from `address(adapter)` — succeeds because adapter holds the aTokens.
-- All aToken accounting for one vault is fully isolated in that vault's adapter.
-- `getBalance(asset, owner)` ignores `owner` for interface compatibility with other adapter styles.
-
----
-
-## DEC-008 — CircuitBreaker Bootstrap: `finalizeVault()` vs `setVault()`
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Problem
-Classic chicken-and-egg: `DemeterFactory.createFund` must:
-1. Deploy `CircuitBreaker` (vault address unknown yet).
-2. Deploy `BeaconProxy` vault.
-3. Tell the CB the real vault address.
-
-Step 3 originally called `cb.setVault(vault)`. But `setVault` is `onlyOwner`. The CB's owner is the DAO multisig (passed at construction). The factory ≠ DAO multisig, so every call reverted with `OwnableUnauthorizedAccount`.
-
-### Original approach (rejected)
-`cb.setVault(vault)` — `onlyOwner`. Factory would need to be the owner, but the owner must be the DAO multisig from day one for security.
-
-### Chosen
-Added `finalizeVault(address vault_)` to `CircuitBreaker`:
-- Gated by `address public immutable deployer` (set to `msg.sender` in constructor = the factory).
-- One-time: `bool public vaultFinalized` prevents replay.
-- The DAO multisig is the Ownable owner from the very first block; factory retains zero ongoing power.
-
-```solidity
-function finalizeVault(address vault_) external {
-    if (msg.sender != deployer) revert Errors.NotManager();
-    if (vaultFinalized)         revert Errors.AlreadyInitialized();
-    if (vault_ == address(0))   revert Errors.ZeroAddress(bytes32("vault"));
-    vaultFinalized = true;
-    vault = vault_;
-    emit VaultUpdated(old, vault_);
-}
-```
-
-The `Errors.AlreadyInitialized()` error was added to `Errors.sol` specifically to support this pattern.
-
----
-
-## DEC-009 — CircuitBreaker wired at `initialize()` vs post-deploy `setCircuitBreaker()`
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Problem
-The factory is not the vault manager, so it cannot call `vault.setCircuitBreaker(cb)` post-deploy — that function is `onlyManager`.
-
-### Chosen
-Added `circuitBreaker` field to `IDemeterVault.InitializeParams`. The factory encodes the CB address in `initData` and passes it to the `BeaconProxy` constructor, wiring the CB at initialization time before any external call can touch the vault.
-
----
-
-## DEC-010 — `_collectFees` Position: Before Deposit (and Post-Deposit HWM Update)
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Problem
-`_collectFees` runs at the START of `depositMulti` before any tokens arrive. On the first-ever deposit: AUM = 0, totalShares = 0, NAV = 0. The HWM and `lastAUMSnapshot` are set to 0. On the second deposit: any positive NAV > 0 = HWM, triggering a spurious performance fee and a spurious management fee on a zero base.
-
-### Fix
-After tokens land and adapters are funded, update both values:
-```solidity
-// At the end of depositMulti, after _deployExcessToAdapters:
-uint256 postAUM = VaultMath.computeTotalAUMUsd(s);
-s.lastAUMSnapshot = postAUM;
-uint256 postNAV   = VaultMath.navPerShare(postAUM, s.totalShares);
-if (postNAV > s.highWaterMark) s.highWaterMark = postNAV;
-```
-
----
-
-## DEC-011 — Deployment Script: Deployer Serves All Roles Initially
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Rationale
-For a testnet deployment where a single account controls everything, requiring separate multisig addresses for guardian, riskAdmin, and treasury would make the process unworkable. All role env vars default to the deployer address if unset. Post-deployment, each role should be rotated to the appropriate address via `ProtocolAddressProvider` governance calls.
-
-This deployment assumption belongs to the legacy prototype and does not apply
-to V2. V2 deployment roles are defined in `ROADMAP_V2.md` Phase 6.
-
----
-
-## DEC-012 — CircuitBreaker Default Limit: `type(uint256).max / 2`
-
-**Status:** Superseded for V2; retained as legacy reference
-
-### Rationale
-A limit of 0 would block all withdrawals immediately. `type(uint256).max` risks overflow in cumulative arithmetic. `type(uint256).max / 2` is a sentinel "effectively unlimited" value that keeps the vault operational out-of-the-box while being clearly non-production. Operators must call `cb.setLimit(period, limitUsd)` before going live with a meaningful TVL.
-
----
-
-## DEC-013 - Index Fund, Not Managed AMM
+## DEC-001 - Index Fund, Not Managed AMM
 
 
 **Status:** Canonical V2
@@ -265,7 +33,7 @@ generic manager `swap` surface.
 
 ---
 
-## DEC-014 - Actual-Reserve Proportional Issue and Redemption
+## DEC-002 - Actual-Reserve Proportional Issue and Redemption
 
 
 **Status:** Canonical V2
@@ -290,7 +58,7 @@ outside the manager.
 
 ---
 
-## DEC-015 - Epoch-Banded Dutch Auctions
+## DEC-003 - Epoch-Banded Dutch Auctions
 
 
 **Status:** Canonical V2
@@ -318,7 +86,7 @@ participate only through audited bounded-fill adapters.
 
 ---
 
-## DEC-016 - Chainlink Anchor Plus External DEX TWAP Guard
+## DEC-004 - Chainlink Anchor Plus External DEX TWAP Guard
 
 
 **Status:** Canonical V2
@@ -346,7 +114,7 @@ issue or redemption amounts.
 
 ---
 
-## DEC-017 - Stable Pool Identity and Immutable Asset List
+## DEC-005 - Stable Pool Identity and Immutable Asset List
 
 
 **Status:** Canonical V2
@@ -372,7 +140,7 @@ migration to a new pool.
 
 ---
 
-## DEC-018 - No General Lock/Callback Core in Phase 1
+## DEC-006 - No General Lock/Callback Core in Phase 1
 
 
 **Status:** Canonical V2
@@ -399,7 +167,7 @@ core fund invariants.
 
 ---
 
-## DEC-019 - Immutable Core Instead of Proxies
+## DEC-007 - Immutable Core Instead of Proxies
 
 
 **Status:** Canonical V2
@@ -426,7 +194,7 @@ only explicit asset and risk configuration is mutable.
 
 ---
 
-## DEC-020 - Restricted AssetRegistry Instead of AddressProvider
+## DEC-008 - Restricted AssetRegistry Instead of AddressProvider
 
 
 **Status:** Canonical V2
@@ -452,7 +220,7 @@ under earlier configuration until a new reference snapshot is validated.
 
 ---
 
-## DEC-021 - Per-Pool ERC-20 Shares
+## DEC-009 - Per-Pool ERC-20 Shares
 
 
 **Status:** Canonical V2
@@ -478,7 +246,7 @@ without a separate migration design.
 
 ---
 
-## DEC-022 - Permissionless Pool Creation Within Global Bounds
+## DEC-010 - Permissionless Pool Creation Within Global Bounds
 
 
 **Status:** Canonical V2
@@ -517,7 +285,7 @@ are blocked until valid configuration exists.
 
 ---
 
-## DEC-023 - Exact Snapshot Targets and Uniform Plan Scaling
+## DEC-011 - Exact Snapshot Targets and Uniform Plan Scaling
 
 
 **Status:** Canonical V2
@@ -548,7 +316,7 @@ Phase 1 bounds cross-plan turnover through `maxTurnoverBps` plus
 
 ---
 
-## DEC-024 - Public Stale-Plan Invalidation and Guardian Cancellation
+## DEC-012 - Public Stale-Plan Invalidation and Guardian Cancellation
 
 
 **Status:** Canonical V2
@@ -581,7 +349,7 @@ old auction nonce from being rebound to a newly written plan.
 
 ---
 
-## DEC-025 - Manager Operation Guard Across Fixed Modules
+## DEC-013 - Manager Operation Guard Across Fixed Modules
 
 
 **Status:** Canonical V2
@@ -614,7 +382,7 @@ Callback and balance-changing tokens remain excluded by the production asset
 gate. Focused adversarial-token tests nevertheless prove that callback attempts
 cannot mutate lifecycle state or mint shares between checks and settlement.
 
-## DEC-026 - Append-Only Cancellation and Launch AUM Control
+## DEC-014 - Append-Only Cancellation and Launch AUM Control
 
 
 **Status:** Canonical V2
