@@ -17,6 +17,7 @@ from .v2_model import (
 
 DEFAULT_OUTPUT = Path(__file__).resolve().parent / "output" / "v2_strategy_comparison"
 INITIAL_AUM_USD = 10_000_000.0
+AUM_LEVELS_USD = (1_000_000.0, 5_000_000.0, 10_000_000.0, 25_000_000.0, 50_000_000.0)
 
 
 def deterministic_price_path(days: int = 365) -> list[list[float]]:
@@ -139,6 +140,18 @@ def run_comparison(days: int = 365, initial_aum_usd: float = INITIAL_AUM_USD) ->
     return results
 
 
+def run_aum_sweep(days: int = 365) -> list[SimulationResult]:
+    path = deterministic_price_path(days)
+    schedule = default_policy_schedule(days)
+    balanced = next(policy for policy in policy_matrix() if policy.name == "V2 Balanced")
+    stresses = stress_matrix(days)[:2]
+    return [
+        AuctionSimulator(balanced, stress).run(path, schedule, aum)
+        for stress in stresses
+        for aum in AUM_LEVELS_USD
+    ]
+
+
 def write_csv_report(path: Path, results: Sequence[SimulationResult]) -> None:
     rows = [result.to_row() for result in results]
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -200,6 +213,47 @@ def write_markdown_report(path: Path, results: Sequence[SimulationResult]) -> No
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def write_aum_report(path: Path, results: Sequence[SimulationResult]) -> None:
+    rows = [result.to_row() for result in results]
+    lines = [
+        "# Demeter V2 AUM Scalability Comparison",
+        "",
+        (
+            "> Fixed-liquidity sensitivity for the balanced V2 policy. "
+            "This is not a recommended AUM cap."
+        ),
+        "",
+        (
+            "| Stress | Initial AUM ($m) | Avg drift (bps) | Completion % | "
+            "Expired | Turnover/AUM | Cumulative unfilled/AUM |"
+        ),
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for row in rows:
+        initial_aum = float(row["initial_aum_usd"])
+        lines.append(
+            "| "
+            f"{row['stress']} | {initial_aum / 1_000_000.0:.1f} | "
+            f"{float(row['average_drift_bps']):.1f} | "
+            f"{float(row['completion_rate_pct']):.1f} | "
+            f"{int(row['plans_expired'])} | "
+            f"{float(row['turnover_usd']) / initial_aum:.3f} | "
+            f"{float(row['unfilled_notional_usd']) / initial_aum:.3f} |"
+        )
+    lines.extend(
+        [
+            "",
+            (
+                "Fixed external liquidity becomes a tighter constraint as AUM grows. "
+                "A production soft cap must be based on calibrated venue depth and "
+                "observed fill quality, not this synthetic threshold."
+            ),
+        ]
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Compare bounded Demeter V2 auction policies.")
     parser.add_argument("--days", type=int, default=365)
@@ -208,9 +262,15 @@ def main() -> None:
     args = parser.parse_args()
 
     results = run_comparison(args.days, args.initial_aum)
+    aum_results = run_aum_sweep(args.days)
     write_csv_report(args.output / "comparison.csv", results)
     write_markdown_report(args.output / "report.md", results)
-    print(f"Wrote {len(results)} strategy/stress results to {args.output}")
+    write_csv_report(args.output / "aum_scaling.csv", aum_results)
+    write_aum_report(args.output / "aum_scaling.md", aum_results)
+    print(
+        f"Wrote {len(results)} strategy/stress results and "
+        f"{len(aum_results)} AUM sensitivity results to {args.output}"
+    )
 
 
 if __name__ == "__main__":

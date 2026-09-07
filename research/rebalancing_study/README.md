@@ -47,6 +47,8 @@ Generated outputs are ignored by Git:
 ```text
 research/rebalancing_study/output/v2_strategy_comparison/comparison.csv
 research/rebalancing_study/output/v2_strategy_comparison/report.md
+research/rebalancing_study/output/v2_strategy_comparison/aum_scaling.csv
+research/rebalancing_study/output/v2_strategy_comparison/aum_scaling.md
 ```
 
 ## Historical Market Comparison

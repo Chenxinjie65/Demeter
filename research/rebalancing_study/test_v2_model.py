@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import unittest
 
-from .v2_compare import default_policy_schedule, deterministic_price_path, run_comparison
+from .v2_compare import (
+    AUM_LEVELS_USD,
+    default_policy_schedule,
+    deterministic_price_path,
+    run_aum_sweep,
+    run_comparison,
+)
 from .v2_model import (
     AuctionPolicy,
     AuctionSimulator,
@@ -129,6 +135,14 @@ class V2ModelTest(unittest.TestCase):
         self.assertEqual(result.metrics.fills, 0)
         self.assertEqual(result.metrics.cumulative_turnover_usd, 0.0)
         self.assertAlmostEqual(result.final_value_usd, 200.0)
+
+    def test_aum_sweep_is_complete_and_fixed_liquidity_binds(self) -> None:
+        results = run_aum_sweep(120)
+        self.assertEqual(len(results), len(AUM_LEVELS_USD) * 2)
+        thin = [result for result in results if result.stress == "Thin liquidity"]
+        self.assertEqual([result.initial_aum_usd for result in thin], list(AUM_LEVELS_USD))
+        self.assertGreaterEqual(thin[0].metrics.plans_finalized, thin[-1].metrics.plans_finalized)
+        self.assertLessEqual(thin[0].average_drift_bps, thin[-1].average_drift_bps)
 
 
 if __name__ == "__main__":
