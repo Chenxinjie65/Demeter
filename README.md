@@ -28,18 +28,16 @@ V2 is being redesigned around:
 - [V2 Implementation Plan](docs/IMPLEMENTATION_PLAN_V2.md)
 - [Rebalancing Whitepaper](docs/REBALANCING_WHITEPAPER.md)
 - [Architecture Decision Log](docs/DECISIONS.md)
-- [AI Execution Prompt](docs/AI_EXECUTION_PROMPT_V2.md)
 - [V2 Release Checklist](docs/RELEASE_CHECKLIST_V2.md)
 - [V2 Static Analysis Triage](docs/STATIC_ANALYSIS_V2.md)
 - [V2 Incident Runbook](docs/INCIDENT_RUNBOOK_V2.md)
 - [V2 Release Evidence](docs/RELEASE_EVIDENCE_V2.md)
-- [Commit Migration](COMMIT_MIGRATION.md)
 
 Chinese mirrors: [architecture](docs/zh/ARCHITECTURE_V2_ZH.md),
 [roadmap](docs/zh/ROADMAP_V2_ZH.md), [implementation plan](docs/zh/IMPLEMENTATION_PLAN_V2_ZH.md),
-[rebalancing whitepaper](docs/zh/REBALANCING_WHITEPAPER_ZH.md), and
-[decision log](docs/zh/DECISIONS_ZH.md). The [AI prompt](docs/zh/AI_EXECUTION_PROMPT_V2_ZH.md)
-and [release checklist](docs/zh/RELEASE_CHECKLIST_V2_ZH.md) are also mirrored.
+[rebalancing whitepaper](docs/zh/REBALANCING_WHITEPAPER_ZH.md),
+[decision log](docs/zh/DECISIONS_ZH.md), and
+[release checklist](docs/zh/RELEASE_CHECKLIST_V2_ZH.md) are also mirrored.
 Static-analysis triage is mirrored [here](docs/zh/STATIC_ANALYSIS_V2_ZH.md).
 The incident runbook is mirrored [here](docs/zh/INCIDENT_RUNBOOK_V2_ZH.md).
 Release evidence is mirrored [here](docs/zh/RELEASE_EVIDENCE_V2_ZH.md).

@@ -5,7 +5,6 @@
 > Tool: Slither 0.11.3
 > Cross-check: Aderyn 0.6.8
 >
-> Analysis date: 2026-09-05
 >
 > Scope: V2 core, oracle, interfaces, types, and libraries. Tests, scripts, and
 > dependencies are filtered; the former V1 implementation is absent from the

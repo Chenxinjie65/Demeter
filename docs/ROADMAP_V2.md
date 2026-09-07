@@ -4,7 +4,6 @@
 
 > Status: Implementation sequence for the auction-based index-fund design.
 >
-> Revision date: 2026-09-05
 
 > Detailed per-contract, per-test, and per-commit work is defined in
 > `IMPLEMENTATION_PLAN_V2.md`.

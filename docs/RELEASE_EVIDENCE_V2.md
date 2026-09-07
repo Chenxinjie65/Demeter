@@ -2,7 +2,6 @@
 
 [中文](zh/RELEASE_EVIDENCE_V2_ZH.md)
 
-> Evidence date: 2026-09-06
 >
 > This is a local engineering gate record. It is not authorization to deploy
 > production assets or accept user AUM.

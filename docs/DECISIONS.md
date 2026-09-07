@@ -9,13 +9,11 @@
 > Status note: DEC-001 through DEC-012 record the legacy Factory/Beacon/Vault
 > prototype. They are historical reference, not canonical V2 design. DEC-013
 > and later define the auction-based index-fund architecture approved on
-> 2026-08-31.
 
 ---
 
 ## DEC-001 — Anti-ERC-4626: In-Kind Basket Model
 
-**Decision date:** Phase 1 (Architecture Design)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Considered
@@ -39,7 +37,6 @@ Strict in-kind proportional basket model:
 
 ## DEC-002 — Flash Accounting via EIP-1153 (Transient Storage)
 
-**Decision date:** Phase 1 (Architecture Design)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Considered
@@ -61,7 +58,6 @@ EIP-1153 transient storage (`TSTORE`/`TLOAD`) — ~100 gas per operation, automa
 
 ## DEC-003 — Virtual Offset vs Dead Shares for Inflation Defence
 
-**Decision date:** Phase 2 (VaultMath implementation)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Considered
@@ -86,7 +82,6 @@ sharesToMint = amount × (totalShares + VIRTUAL_SHARES) / (totalAUM + VIRTUAL_AU
 
 ## DEC-004 — Beacon Proxy vs UUPS vs Transparent Proxy
 
-**Decision date:** Phase 1 (Architecture Design)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Considered
@@ -105,7 +100,6 @@ Beacon Proxy (`UpgradeableBeacon` + `BeaconProxy`):
 
 ## DEC-005 — Buffer Ratio: 10% Idle / 90% Deployed
 
-**Decision date:** Phase 1 (Architecture Design)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Rationale
@@ -119,7 +113,6 @@ Aave V3 at 100% utilisation cannot service withdrawals — the pool `revert`s. A
 
 ## DEC-006 — Rounding Convention: Both Directions Round DOWN
 
-**Decision date:** Phase 2 (VaultMath)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Rationale
@@ -133,7 +126,6 @@ This is the "vault-favourable" convention used by ERC-4626 and Morpho. It preven
 
 ## DEC-007 — One AaveV3Adapter Per Vault (Critical Design Fix)
 
-**Decision date:** Phase 5 (AaveV3Adapter implementation)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Original (incorrect) design
@@ -161,7 +153,6 @@ balance = IERC20(aToken).balanceOf(address(this));
 
 ## DEC-008 — CircuitBreaker Bootstrap: `finalizeVault()` vs `setVault()`
 
-**Decision date:** Phase 6 (CircuitBreaker / DemeterFactory)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Problem
@@ -198,7 +189,6 @@ The `Errors.AlreadyInitialized()` error was added to `Errors.sol` specifically t
 
 ## DEC-009 — CircuitBreaker wired at `initialize()` vs post-deploy `setCircuitBreaker()`
 
-**Decision date:** Phase 4 (DemeterFactory)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Problem
@@ -211,7 +201,6 @@ Added `circuitBreaker` field to `IDemeterVault.InitializeParams`. The factory en
 
 ## DEC-010 — `_collectFees` Position: Before Deposit (and Post-Deposit HWM Update)
 
-**Decision date:** Phase 3 (DemeterVault, discovered during testing)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Problem
@@ -231,7 +220,6 @@ if (postNAV > s.highWaterMark) s.highWaterMark = postNAV;
 
 ## DEC-011 — Deployment Script: Deployer Serves All Roles Initially
 
-**Decision date:** Phase 7 (Deployment Scripts)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Rationale
@@ -244,7 +232,6 @@ to V2. V2 deployment roles are defined in `ROADMAP_V2.md` Phase 6.
 
 ## DEC-012 — CircuitBreaker Default Limit: `type(uint256).max / 2`
 
-**Decision date:** Phase 4 (DemeterFactory)
 **Status:** Superseded for V2; retained as legacy reference
 
 ### Rationale
@@ -254,7 +241,6 @@ A limit of 0 would block all withdrawals immediately. `type(uint256).max` risks 
 
 ## DEC-013 - Index Fund, Not Managed AMM
 
-**Decision date:** 2026-08-31
 
 **Status:** Canonical V2
 
@@ -281,7 +267,6 @@ generic manager `swap` surface.
 
 ## DEC-014 - Actual-Reserve Proportional Issue and Redemption
 
-**Decision date:** 2026-08-31
 
 **Status:** Canonical V2
 
@@ -307,7 +292,6 @@ outside the manager.
 
 ## DEC-015 - Epoch-Banded Dutch Auctions
 
-**Decision date:** 2026-08-31
 
 **Status:** Canonical V2
 
@@ -336,7 +320,6 @@ participate only through audited bounded-fill adapters.
 
 ## DEC-016 - Chainlink Anchor Plus External DEX TWAP Guard
 
-**Decision date:** 2026-08-31
 
 **Status:** Canonical V2
 
@@ -365,7 +348,6 @@ issue or redemption amounts.
 
 ## DEC-017 - Stable Pool Identity and Immutable Asset List
 
-**Decision date:** 2026-08-31
 
 **Status:** Canonical V2
 
@@ -392,7 +374,6 @@ migration to a new pool.
 
 ## DEC-018 - No General Lock/Callback Core in Phase 1
 
-**Decision date:** 2026-08-31
 
 **Status:** Canonical V2
 
@@ -420,7 +401,6 @@ core fund invariants.
 
 ## DEC-019 - Immutable Core Instead of Proxies
 
-**Decision date:** 2026-09-01
 
 **Status:** Canonical V2
 
@@ -448,7 +428,6 @@ only explicit asset and risk configuration is mutable.
 
 ## DEC-020 - Restricted AssetRegistry Instead of AddressProvider
 
-**Decision date:** 2026-09-01
 
 **Status:** Canonical V2
 
@@ -475,7 +454,6 @@ under earlier configuration until a new reference snapshot is validated.
 
 ## DEC-021 - Per-Pool ERC-20 Shares
 
-**Decision date:** 2026-09-01
 
 **Status:** Canonical V2
 
@@ -502,7 +480,6 @@ without a separate migration design.
 
 ## DEC-022 - Permissionless Pool Creation Within Global Bounds
 
-**Decision date:** 2026-09-01
 
 **Status:** Canonical V2
 
@@ -542,7 +519,6 @@ are blocked until valid configuration exists.
 
 ## DEC-023 - Exact Snapshot Targets and Uniform Plan Scaling
 
-**Decision date:** 2026-09-02
 
 **Status:** Canonical V2
 
@@ -574,7 +550,6 @@ Phase 1 bounds cross-plan turnover through `maxTurnoverBps` plus
 
 ## DEC-024 - Public Stale-Plan Invalidation and Guardian Cancellation
 
-**Decision date:** 2026-09-02
 
 **Status:** Canonical V2
 
@@ -608,7 +583,6 @@ old auction nonce from being rebound to a newly written plan.
 
 ## DEC-025 - Manager Operation Guard Across Fixed Modules
 
-**Decision date:** 2026-09-04
 
 **Status:** Canonical V2
 
@@ -642,7 +616,6 @@ cannot mutate lifecycle state or mint shares between checks and settlement.
 
 ## DEC-026 - Append-Only Cancellation and Launch AUM Control
 
-**Decision date:** 2026-09-05
 
 **Status:** Canonical V2
 

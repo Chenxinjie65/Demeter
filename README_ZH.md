@@ -26,12 +26,10 @@ Demeter V2 是链上指数基金，而不是以全部基金储备提供公开交
 - [V2 实施计划](docs/zh/IMPLEMENTATION_PLAN_V2_ZH.md)
 - [调仓白皮书](docs/zh/REBALANCING_WHITEPAPER_ZH.md)
 - [架构决策记录](docs/zh/DECISIONS_ZH.md)
-- [AI 执行提示词](docs/zh/AI_EXECUTION_PROMPT_V2_ZH.md)
 - [V2 发布检查清单](docs/zh/RELEASE_CHECKLIST_V2_ZH.md)
 - [V2 静态分析分类](docs/zh/STATIC_ANALYSIS_V2_ZH.md)
 - [V2 事故处理手册](docs/zh/INCIDENT_RUNBOOK_V2_ZH.md)
 - [V2 发布证据](docs/zh/RELEASE_EVIDENCE_V2_ZH.md)
-- [Git 提交迁移](COMMIT_MIGRATION.md)
 
 英文原文仍是实现与安全审计的权威版本。
 

@@ -2,10 +2,7 @@
 
 [中文](zh/ARCHITECTURE_V2_ZH.md)
 
-> Status: Canonical architecture for branch `redesign_v2_singleton`.
->
-> Revision date: 2026-09-05
->
+> Status: Canonical architecture for the V2 `main` branch.
 > Scope: Demeter is an onchain index fund. It is not an AMM whose entire
 > treasury is offered as public swap liquidity.
 

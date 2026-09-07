@@ -3,8 +3,6 @@
 [中文](zh/INCIDENT_RUNBOOK_V2_ZH.md)
 
 > Status: Operational prerequisite for an AUM-bearing deployment.
->
-> Revision date: 2026-09-05
 
 ## 1. Safety Priorities
 

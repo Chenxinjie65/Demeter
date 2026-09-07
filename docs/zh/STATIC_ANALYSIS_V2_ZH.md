@@ -4,8 +4,6 @@
 
 > 工具：Slither 0.11.3；交叉检查：Aderyn 0.6.8
 >
-> 日期：2026-09-05
->
 > 范围：V2 core、oracle、interfaces、types、libraries；过滤测试、脚本和依赖。旧 V1
 > 实现已从工作树移除，仅保留在 Git 历史中。
 

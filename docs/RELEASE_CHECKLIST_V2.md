@@ -4,8 +4,6 @@
 
 > Status: Required release gate. Passing local tests is not authorization to
 > deploy assets or accept AUM.
->
-> Revision date: 2026-09-05
 
 ## 1. Code And Specification
 

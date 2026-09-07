@@ -3,8 +3,7 @@
 [English](../DECISIONS.md)
 
 > 说明：DEC-001 至 DEC-012 记录旧 Factory/Beacon/Vault 原型的历史决策，保留
-> 供排错参考，不是 V2 规范。DEC-013 及以后记录 2026-08-31 批准的 V2 指数基金
-> 架构。
+> 供排错参考，不是 V2 规范。DEC-013 及以后记录批准的 V2 指数基金架构。
 
 ## DEC-001 - 反 ERC-4626：同类资产篮子
 
@@ -101,7 +100,6 @@ V2 不允许使用“有效无限”的生产风险参数。每个 auction plan 
 
 ## DEC-013 - 指数基金，而不是管理型 AMM
 
-**日期：** 2026-08-31；**状态：** V2 正式决策。
 
 否决通过改变 Balancer 权重让套利者被动调仓的方案。改变 AMM 权重会改变基金报价，
 基金持有人成为套利让价的库存提供者。Demeter 是指数基金：持有篮子、发行按比例
@@ -109,14 +107,12 @@ V2 不允许使用“有效无限”的生产风险参数。每个 auction plan 
 
 ## DEC-014 - 按实际储备比例申购和赎回
 
-**日期：** 2026-08-31；**状态：** V2 正式决策。
 
 否决 oracle NAV 定价和按目标权重强制入金。普通 issue/redeem 只读取 Manager 记录
 的实际储备与份额供应。目标权重、Chainlink 和 TWAP 只用于调仓计划和保护边界。
 
 ## DEC-015 - Epoch-Banded 荷兰拍卖
 
-**日期：** 2026-08-31；**状态：** V2 正式决策。
 
 否决 Manager 直接 DEX、TWAP 切片、渐变 AMM 和 solver-only 方案。V2 使用政策 epoch
 与漂移双阈值产生固定计划，再以起始溢价到最大折价的有界荷兰拍卖执行。拍卖公开、
@@ -124,7 +120,6 @@ V2 不允许使用“有效无限”的生产风险参数。每个 auction plan 
 
 ## DEC-016 - Chainlink 主锚 + 外部 DEX TWAP 保护
 
-**日期：** 2026-08-31；**状态：** V2 正式决策。
 
 Chainlink 是主要 USD 价值锚和资产准入条件；外部、非 Demeter 池的 DEX TWAP 是独立
 交叉检查。计划创建和每次 bid 前，两个来源都必须新鲜、有效且偏差在配置范围内。
@@ -135,7 +130,6 @@ Chainlink 是主要 USD 价值锚和资产准入条件；外部、非 Demeter �
 
 ## DEC-017 - 稳定池身份与不可变资产列表
 
-**日期：** 2026-08-31；**状态：** V2 正式决策。
 
 `poolId` 只由 `chainId`、Manager、creator、资产顺序、policy family 和 creator salt
 派生。creator 绑定所有权并防止 mempool 复制抢占。目标权重、
@@ -144,7 +138,6 @@ Chainlink 是主要 USD 价值锚和资产准入条件；外部、非 Demeter �
 
 ## DEC-018 - 第一阶段不强制 lock/callback 核心
 
-**日期：** 2026-08-31；**状态：** V2 正式决策。
 
 比例 issue/redeem 和直接 ERC-20 bid 不需要任意回调或 transient delta。第一阶段使用
 简单、可审计的原子转账；仍使用 OpenZeppelin transient reentrancy guard 作为 Manager
@@ -154,7 +147,6 @@ Manager 的资产调用面。
 
 ## DEC-019 - 不使用代理，采用不可变核心与受限配置
 
-**日期：** 2026-09-01；**状态：** V2 正式决策。
 
 `DemeterManager`、`DemeterShare`、`AuctionRebalance`、`IndexPolicy` 和
 `AssetRegistry` 均不使用 proxy。核心依赖在构造时 immutable，或由 Manager 在首池前
@@ -163,7 +155,6 @@ Manager 的资产调用面。
 
 ## DEC-020 - AssetRegistry，而不是万能 AddressProvider
 
-**日期：** 2026-09-01；**状态：** V2 正式决策。
 
 V2 使用职责受限的 `AssetRegistry` 记录资产 decimals、Chainlink feed、外部 TWAP
 池、窗口、偏差和角色。Manager、Policy、Auction 的关键依赖尽量 immutable，不允许
@@ -172,7 +163,6 @@ V2 使用职责受限的 `AssetRegistry` 记录资产 decimals、Chainlink feed�
 
 ## DEC-021 - ERC-20 基金份额
 
-**日期：** 2026-09-01；**状态：** V2 正式决策。
 
 虽然 ERC-6909 能在单例内按 ID 管理多种份额，但基金份额需要钱包、DEX、借贷协议
 和聚合器的现成 ERC-20 兼容性。Demeter 保留每池独立 ERC-20 `DemeterShare`；未来
@@ -180,7 +170,6 @@ V2 使用职责受限的 `AssetRegistry` 记录资产 decimals、Chainlink feed�
 
 ## DEC-022 - 在全局边界内无需许可创建池
 
-**日期：** 2026-09-01；**状态：** V2 正式决策。
 
 任何地址都可以基于 `AssetRegistry` 已启用的资产集合创建自己的指数基金，无需 DAO
 逐池批准。创建者提交不可变资产顺序、share 元数据、bootstrapper 和 policy family，
@@ -206,7 +195,6 @@ policy hash 是 creator commitment，不是逐池 timelock 批准。`MANAGED_IND
 
 ## DEC-023 - 精确快照目标与统一计划缩放
 
-**日期：** 2026-09-02；**状态：** V2 正式决策。
 
 否决以 `1e18` 精度保存每份额目标并独立裁剪每项资产差额：低 decimals 资产配合极大
 share supply 会把目标舍入为零，独立裁剪还可能生成总价值不守恒、无法由 surplus
@@ -220,7 +208,6 @@ share supply 会把目标舍入为零，独立裁剪还可能生成总价值不�
 
 ## DEC-024 - 公众使旧计划失效，Guardian 取消有效计划
 
-**日期：** 2026-09-02；**状态：** V2 正式决策。
 
 否决“任何 oracle revert 都允许公众取消”：caller 可故意限制 gas 或利用瞬时依赖故障，
 反复取消本来安全的拍卖。任何人只有在资产/oracle/policy family/global bound 固定版本
@@ -230,7 +217,6 @@ closed。Guardian 可对 Planned 或 AuctionActive 调用 `cancelPlan`，但不�
 
 ## DEC-025 - 固定模块共享 Manager 操作 Guard
 
-**日期：** 2026-09-04；**状态：** V2 正式决策。
 
 否决“仅依赖每个合约自己的 `nonReentrant` 与治理排除 callback token”：Manager 转账时，
 Auction 可能仍需在结算返回后写状态。callback 虽不能重入 Manager，却可调用另一个合约
@@ -248,7 +234,6 @@ callback 无法在检查与结算之间改写生命周期状态或铸造份额�
 
 ## DEC-026 - 取消仍保持 append-only 与首发 AUM 控制
 
-**日期：** 2026-09-05；**状态：** V2 正式决策。
 
 尚未激活的政策可以由 creator 取消，或在固定配置过期时由公众失效，但取消不能删除
 已发布的版本。尤其是取消初始 version 1 后，其 hash 和版本记录仍保留；池不能重新发布

@@ -4,8 +4,6 @@
 
 > Status: Binding implementation plan for the V2 auction-based index fund.
 >
-> Revision date: 2026-09-05
->
 > Audience: AI coding agents and reviewers. Every slice is independently
 > buildable, tested, and committed before work begins on the next slice.
 
@@ -13,10 +11,8 @@
 
 1. Read `ARCHITECTURE_V2.md`, `REBALANCING_WHITEPAPER.md`, and this document
    before changing V2 code.
-2. V2 work is performed on the V2-only working tree; legacy contracts remain
-   available only through historical Git commits.
-   Put new code in the V2 paths below. Legacy removal is a separate, reviewed
-   migration task after V2 replacement coverage exists.
+2. V2 work is performed on the V2-only working tree. Put new code in the V2
+   paths below; the working tree is already V2-only.
 3. Use Solidity `^0.8.24`, Foundry, custom errors, and explicit NatSpec on
    external interfaces. Code and canonical documents are English; every
    canonical document has a synchronized Chinese mirror under `docs/zh/`.

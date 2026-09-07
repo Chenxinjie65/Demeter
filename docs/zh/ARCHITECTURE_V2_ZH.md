@@ -2,10 +2,7 @@
 
 [English](../ARCHITECTURE_V2.md)
 
-> 状态：`redesign_v2_singleton` 分支的正式架构。
->
-> 修订日期：2026-09-05
->
+> 状态：V2 `main` 分支的正式架构。
 > 范围：Demeter 是链上指数基金，不是把全部金库储备提供为公开 swap
 > 流动性的 AMM。
 

@@ -4,8 +4,6 @@
 
 > Status: Canonical economic and execution specification for Demeter V2.
 >
-> Revision date: 2026-09-05
->
 > Product: an onchain index fund, not a public AMM liquidity pool.
 
 ## 1. Purpose
@@ -402,7 +400,7 @@ execution methods in every market regime.
 
 ## 12. References
 
-- [Index Coop, "Introducing Auction Rebalancing"](https://www.indexcoop.com/blog/introducing-auction-rebalancing), January 2024.
+- [Index Coop, "Introducing Auction Rebalancing"](https://www.indexcoop.com/blog/introducing-auction-rebalancing).
 - [Reserve Index Protocol, "Rebalance Lifecycle", release 4.0.0](https://docs.reserve.org/reserve-index/rebalancing/4-0-0).
 - [Balancer, "Liquidity Bootstrapping FAQ"](https://balancer.gitbook.io/balancer/smart-contracts/smart-pools/liquidity-bootstrapping-faq).
-- [Vanguard, "The Rebalancing Edge: Optimizing Target-Date Fund Rebalancing Through Threshold-Based Strategies"](https://corporate.vanguard.com/content/dam/corp/research/pdf/the_rebalancing_edge_optimizing_target-date-fund-rebalancing-through-threshold-based-strategies.pdf), December 2024.
+- [Vanguard, "The Rebalancing Edge: Optimizing Target-Date Fund Rebalancing Through Threshold-Based Strategies"](https://corporate.vanguard.com/content/dam/corp/research/pdf/the_rebalancing_edge_optimizing_target-date-fund-rebalancing-through-threshold-based-strategies.pdf).
