@@ -6,7 +6,8 @@
 >
 > 日期：2026-09-05
 >
-> 范围：V2 core、oracle、interfaces、types、libraries；过滤 legacy Vault/Factory/Aave/通用 Router、测试、脚本和依赖。
+> 范围：V2 core、oracle、interfaces、types、libraries；过滤测试、脚本和依赖。旧 V1
+> 实现已从工作树移除，仅保留在 Git 历史中。
 
 使用 `bash script/v2/check-slither.sh` 执行门禁。脚本使用 Slither 的 `--fail-high`，
 每次运行都写入新的临时 JSON 报告。当前 V2 范围没有

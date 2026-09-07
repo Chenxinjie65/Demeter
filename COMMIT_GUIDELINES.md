@@ -38,7 +38,7 @@
   - `style`：代码风格（空格、格式化等），不影响逻辑
 
 - **scope**（可选，建议使用）：
-  - 用于说明影响的模块，例如：`core`, `vault`, `factory`, `oracle`, `address-provider`, `docs`, `scripts`
+  - 用于说明影响的模块，例如：`core`, `manager`, `auction`, `oracle`, `docs`, `scripts`
   - 如果不想写 scope，也可以省略括号，直接写 `feat: ...`
 
 - **summary**（必填）：
@@ -48,15 +48,15 @@
 **示例：**
 
 ```text
-feat(core): add DemeterVault storage layout with ERC-7201
+feat(core): add singleton manager reserve accounting
 
 fix(oracle): enforce max stale time for chainlink feeds
 
 docs: update architecture diagram and role descriptions
 
-refactor(address-provider): rename factory getter to getFactory
+refactor(auction): extract bounded quote math
 
-test(vault): add fuzz tests for deposit/withdraw math
+test(manager): add fuzz tests for proportional claims
 ```
 
 ---
@@ -83,7 +83,7 @@ test(vault): add fuzz tests for deposit/withdraw math
 - **新增合约或模块：**
 
 ```text
-feat(core): add ChainlinkOracle implementation
+feat(oracle): add Chainlink and common-quote validation
 ```
 
 - **修复重入或安全问题：**
@@ -95,7 +95,7 @@ fix(vault): add nonReentrant guard to deposit and withdraw
 - **仅改注释 / 文档：**
 
 ```text
-docs: clarify upgrade model for DemeterVault and AddressProvider
+docs(v2): clarify immutable core and governance wiring
 ```
 
 - **更新依赖或 Foundry 配置：**
@@ -113,4 +113,3 @@ chore: bump openzeppelin-contracts to v5.1.0 and update remappings
 - 代码可以正常编译（`forge build` / `forge test` 至少跑一遍核心测试）。
 - 没有意外提交的临时文件（如 `.env.local`、IDE 配置、编译产物等）。
 - 提交信息符合上述格式，能让几天后的自己/他人“一眼看懂”这次改了什么、为什么改。
-

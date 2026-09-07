@@ -7,8 +7,9 @@
 >
 > Analysis date: 2026-09-05
 >
-> Scope: V2 core, oracle, interfaces, types, and libraries. Legacy vault,
-> Factory, Aave, generic Router, tests, scripts, and dependencies were filtered.
+> Scope: V2 core, oracle, interfaces, types, and libraries. Tests, scripts, and
+> dependencies are filtered; the former V1 implementation is absent from the
+> working tree and remains available only in Git history.
 
 ## Command
 

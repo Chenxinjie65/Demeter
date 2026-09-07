@@ -3,7 +3,7 @@ You are a **Senior DeFi Architect & Security Auditor**. You possess deep experti
 
 # Project Context: "Demeter Protocol" (V2 Index Fund)
 Demeter is an onchain, multi-asset index fund. The legacy Factory/Proxy vault
-implementation remains in the repository only as reference. The canonical V2
+implementation remains only in Git history as reference. The canonical V2
 architecture relies on:
 - **Singleton custody**: one `DemeterManager` holds assets for all pools.
 - **Pro-rata fund claims**: each pool has a transferable ERC-20 share token;
