@@ -53,7 +53,7 @@
 
 - 编辑前检查 `git status`，保留用户无关改动。
 - 禁止 `git reset --hard`、`git checkout --`、宽泛删除或重写生成文件。
-- V2 与 legacy 路径隔离，直到替代覆盖通过审查。
+- 工作树保持 V2-only；legacy 实现仅保留在历史 Git 提交中，不得重新加入构建范围。
 - 手工编辑使用 `apply_patch`；代码和 NatSpec 使用专业英文与 ASCII。
 - Solidity `^0.8.24`、Foundry、Cancun、named imports、自定义错误、CEI、`SafeERC20`、`Math.mulDiv`。
 - 每个新增 external 函数都要有 NatSpec 和定向测试。

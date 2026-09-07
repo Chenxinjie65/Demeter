@@ -49,9 +49,8 @@ Required outcomes:
 Warnings originating only from a pinned test dependency must be recorded, not
 silently confused with project warnings.
 
-The legacy prototype is intentionally outside the V2 formatting gate. Do not
-create a repository-wide formatting diff merely to make the legacy tree match
-the current formatter; full-repository behavioral tests still run.
+The V1 prototype is intentionally absent from the V2 working tree; historical
+commits remain available when legacy behavior must be inspected.
 
 ## 3. Governance And Deployment
 

@@ -90,7 +90,8 @@ mean arbitrary token support or arbitrary external execution.
 - Inspect `git status` before editing. Preserve unrelated user changes.
 - Do not use `git reset --hard`, `git checkout --`, broad deletion, or generated
   file rewrites.
-- Keep V2 code separate from legacy files until replacement tests exist.
+- Keep the working tree V2-only; legacy implementations are historical Git
+  references and must not be reintroduced into the build surface.
 - Use `apply_patch` for manual edits and ASCII by default.
 - Use absolute/named imports. New contracts use strict Solidity `^0.8.24` and
   the Cancun EVM setting.

@@ -23,8 +23,8 @@ README 与 docs 的 canonical Markdown 链接检查
 ```
 
 release invariant 使用每个 invariant harness 2,000 轮、每轮 200,000 次调用；release
-数学测试中四个算术 fuzz 属性各执行 10,000 次。完整行为测试同时包含 legacy 回归和
-V2 测试，均报告零失败。
+数学测试中四个算术 fuzz 属性各执行 10,000 次。当前完整行为测试仅包含 V2 测试，
+均报告零失败。
 
 V2 runtime size 门禁结果：
 
@@ -43,8 +43,7 @@ Slither 0.11.3 使用 `--fail-high` 完成。92 条结果已写入静态分析�
 
 ## 交付阻塞项
 
-- 当前环境的 `.git` 目录只读。`git commit` 无法创建 `.git/index.lock`，因此实施计划
-  要求的逐切片提交尚不存在。
+- V1 原型文件已在 clean-V2 迁移中从工作树删除；其历史仍保留在此前的 Git 提交中。
 - 尚未提供生产链、首批批准资产、真实 RPC、已部署 Timelock 角色、生产 fork fixture、
   经济仿真报告或独立审计，因此发布清单仍不能签字。
 - 首池 AUM 上限已明确为运营软上限，不是比例 issue 路径中的链上硬上限。

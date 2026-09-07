@@ -26,8 +26,8 @@ canonical Markdown link check (README and docs)
 
 The release invariant run used 2,000 sequences and 200,000 calls per invariant
 harness. The release math run used 10,000 cases for each of the four arithmetic
-fuzz properties. The full behavioral suite included both legacy regression tests
-and the V2 suite; all reported zero failures.
+fuzz properties. The full behavioral suite now contains only the V2 suite; all
+reported zero failures.
 
 The V2 runtime-size gate reported:
 
@@ -49,9 +49,8 @@ interfaces.
 
 ## Delivery blockers
 
-- The repository `.git` directory is read-only in the current environment.
-  `git commit` cannot create `.git/index.lock`, so the per-slice commits required
-  by `IMPLEMENTATION_PLAN_V2.md` are not present yet.
+- The V1 prototype files were removed from the working tree in the clean-V2
+  migration; their history remains available in prior Git commits.
 - No production chain, first approved asset set, live RPC, deployed Timelock
   roles, production fork fixtures, economic simulation report, or independent
   audit has been supplied. The release checklist therefore remains unsigned.

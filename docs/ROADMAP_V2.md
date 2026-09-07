@@ -11,9 +11,9 @@
 
 ## 1. Delivery Principle
 
-V2 is a controlled rewrite. The existing Factory, BeaconProxy, and vault code
-remains useful as test and operational reference, but it is not the base for
-the new protocol.
+V2 is the canonical working-tree implementation. The former Factory,
+BeaconProxy, and vault prototype is retained only in Git history and is not
+part of the build or test surface.
 
 The delivery order follows fund safety, not feature breadth:
 
@@ -28,32 +28,7 @@ bounded auction under fuzzing.
 
 ## 2. Keep, Rewrite, and Defer
 
-### 2.1 Keep as reference
-
-- `src/modules/oracle/ChainlinkOracle.sol`
-- `src/modules/governance/AssetWhitelist.sol`
-- `src/libraries/Errors.sol`
-- `src/libraries/FlashAccounting.sol`
-- `src/libraries/TransientLock.sol`
-- `test/mocks/*`
-- `research/rebalancing_study/*`
-
-These files contain useful patterns, but none is canonical without adaptation.
-In particular, flash accounting and transient locks are deferred from the
-Phase-1 core.
-
-### 2.2 Legacy paths not extended by V2
-
-- `src/core/DemeterVault.sol`
-- `src/core/DemeterFactory.sol`
-- `src/core/DemeterRouter.sol` (replaced by `DemeterBasketRouter.sol` for V2)
-- `src/libraries/VaultStorage.sol`
-- `src/libraries/VaultMath.sol`
-- `src/modules/adapters/AaveV3Adapter.sol`
-- `src/modules/circuit-breaker/CircuitBreaker.sol`
-- `script/CreateFund.s.sol`
-
-### 2.3 Deferred from the canonical core
+### 2.1 Deferred from the canonical core
 
 - weighted AMM pricing and public pool swaps;
 - passive trajectory and dynamic fee modules;

@@ -13,7 +13,8 @@
 
 1. Read `ARCHITECTURE_V2.md`, `REBALANCING_WHITEPAPER.md`, and this document
    before changing V2 code.
-2. Do not rewrite or delete legacy contracts as part of a V2 feature slice.
+2. V2 work is performed on the V2-only working tree; legacy contracts remain
+   available only through historical Git commits.
    Put new code in the V2 paths below. Legacy removal is a separate, reviewed
    migration task after V2 replacement coverage exists.
 3. Use Solidity `^0.8.24`, Foundry, custom errors, and explicit NatSpec on

@@ -2,10 +2,9 @@
 
 [中文版](README_ZH.md)
 
-This repository now contains two realities:
-
-- the existing `Factory + BeaconProxy + per-vault` implementation, which is treated as legacy prototype code,
-- the `redesign_v2_singleton` rewrite effort, which is the canonical direction for new development.
+This repository contains the canonical Demeter V2 singleton implementation.
+The former Factory/Beacon/Vault prototype remains available only in Git history
+and is not part of the working-tree build or test surface.
 
 ## Current Direction
 

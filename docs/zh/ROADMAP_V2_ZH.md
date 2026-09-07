@@ -11,8 +11,8 @@
 
 ## 1. 交付原则
 
-V2 是受控重写。现有 Factory、BeaconProxy 和旧 vault 代码仅作为测试、部署
-和历史问题参考，不作为新协议基础。
+V2 是工作树中的唯一规范实现。旧 Factory、BeaconProxy 和 vault 原型仅保留在
+Git 历史中，不再属于构建或测试范围。
 
 交付顺序优先保证基金安全，而不是优先扩展功能：
 
@@ -26,31 +26,7 @@ DEX 交易、收益策略、通用回调、通用 hooks 或任意外部调用。
 
 ## 2. 保留、重写与延后
 
-### 2.1 作为参考保留
-
-- `src/modules/oracle/ChainlinkOracle.sol`
-- `src/modules/governance/AssetWhitelist.sol`
-- `src/libraries/Errors.sol`
-- `src/libraries/FlashAccounting.sol`
-- `src/libraries/TransientLock.sol`
-- `test/mocks/*`
-- `research/rebalancing_study/*`
-
-这些文件只能提取模式，不能未经审查直接作为 V2 依赖。尤其是 flash accounting
-和 transient lock 延后到未来经过审计的 solver adapter。
-
-### 2.2 V2 不继续扩展的 legacy 路径
-
-- `src/core/DemeterVault.sol`
-- `src/core/DemeterFactory.sol`
-- `src/core/DemeterRouter.sol`（V2 使用 `DemeterBasketRouter.sol`）
-- `src/libraries/VaultStorage.sol`
-- `src/libraries/VaultMath.sol`
-- `src/modules/adapters/AaveV3Adapter.sol`
-- `src/modules/circuit-breaker/CircuitBreaker.sol`
-- `script/CreateFund.s.sol`
-
-### 2.3 不属于当前核心
+### 2.1 不属于当前核心
 
 - 加权 AMM 定价和公共池 swap；
 - Manager 主动 DEX 交易和任意 calldata；
