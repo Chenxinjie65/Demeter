@@ -8,7 +8,7 @@ import {PoolTypes} from "src/types/PoolTypes.sol";
 /**
  * @title IDemeterManager
  * @notice Singleton custody, proportional claim, and auction settlement API.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 interface IDemeterManager {
     event PoolCreated(bytes32 indexed poolId, address indexed creator, address indexed share);

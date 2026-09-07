@@ -10,7 +10,7 @@ import {ITwapOracle} from "src/interfaces/ITwapOracle.sol";
 /**
  * @title IAuctionRebalance
  * @notice Public plan, auction, and direct-bid interface.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 interface IAuctionRebalance {
     event PlanStarted(

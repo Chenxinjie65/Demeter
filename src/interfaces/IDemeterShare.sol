@@ -6,7 +6,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 /**
  * @title IDemeterShare
  * @notice ERC-20 claim token interface for one Demeter pool.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 interface IDemeterShare is IERC20 {
     /// @notice Return the immutable pool ID represented by this share token.

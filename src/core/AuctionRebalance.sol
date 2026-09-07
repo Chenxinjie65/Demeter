@@ -20,7 +20,7 @@ import {RebalanceTypes} from "src/types/RebalanceTypes.sol";
 /**
  * @title AuctionRebalance
  * @notice Permissionless bounded rebalance plans and direct Dutch-auction bids.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 contract AuctionRebalance is IAuctionRebalance, ReentrancyGuardTransient {
     uint256 private constant BPS = 10_000;

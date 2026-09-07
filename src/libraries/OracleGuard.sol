@@ -12,7 +12,7 @@ import {PoolTypes} from "src/types/PoolTypes.sol";
 /**
  * @title OracleGuard
  * @notice Chainlink + common-quote TWAP validation for plans and bids.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 library OracleGuard {
     uint256 internal constant WAD = 1e18;

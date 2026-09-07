@@ -8,7 +8,7 @@ import {IDemeterManager} from "src/interfaces/IDemeterManager.sol";
 /**
  * @title IIndexPolicy
  * @notice Permissionless, delayed policy publication within global bounds.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 interface IIndexPolicy {
     event PolicyPublished(bytes32 indexed poolId, uint64 indexed version, address indexed creator, bytes32 policyHash);

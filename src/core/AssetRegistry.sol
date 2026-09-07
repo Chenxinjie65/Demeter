@@ -13,7 +13,7 @@ import {PoolTypes} from "src/types/PoolTypes.sol";
  * @notice Timelock-controlled asset admission and global pool safety bounds.
  * @dev Token behavior is governance-attested at admission and rechecked through
  * exact balance deltas at runtime. This contract never holds user assets.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 contract AssetRegistry is IAssetRegistry {
     uint16 private constant MAX_ASSETS_HARD_CAP = 32;

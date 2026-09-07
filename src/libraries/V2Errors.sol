@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 /**
  * @title V2Errors
  * @notice Namespaced custom errors for the Demeter V2 contracts.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 library V2Errors {
     error V2Errors__ZeroAddress(bytes32 field);

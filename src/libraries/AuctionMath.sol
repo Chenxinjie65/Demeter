@@ -7,7 +7,7 @@ import {V2Errors} from "src/libraries/V2Errors.sol";
 /**
  * @title AuctionMath
  * @notice Full-precision price and native-unit payment math for V2 auctions.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 library AuctionMath {
     uint256 internal constant BPS = 10_000;

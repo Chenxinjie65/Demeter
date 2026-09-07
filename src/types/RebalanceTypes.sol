@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 /**
  * @title RebalanceTypes
  * @notice Policy, plan, and auction data structures for Demeter V2.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 library RebalanceTypes {
     /// @notice Lifecycle of a policy-driven rebalance.

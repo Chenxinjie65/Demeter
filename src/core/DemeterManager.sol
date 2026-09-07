@@ -24,7 +24,7 @@ import {RebalanceTypes} from "src/types/RebalanceTypes.sol";
  * @notice Singleton custody and proportional reserve ledger for Demeter V2.
  * @dev The contract never prices issue or redeem through an oracle and never
  * grants token approvals to external venues.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 contract DemeterManager is IDemeterManager, ReentrancyGuardTransient {
     using SafeERC20 for IERC20;

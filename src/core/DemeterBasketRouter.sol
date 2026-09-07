@@ -21,7 +21,7 @@ import {PoolTypes} from "src/types/PoolTypes.sol";
  *
  * Unsolicited balances are refunded to the current caller at the start of its
  * route. They are never incorporated into an issue or treated as custody.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 contract DemeterBasketRouter is IDemeterBasketRouter, ReentrancyGuardTransient {
     using SafeERC20 for IERC20;

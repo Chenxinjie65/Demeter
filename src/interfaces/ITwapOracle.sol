@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 /**
  * @title ITwapOracle
  * @notice Stateless external-market TWAP quote interface.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 interface ITwapOracle {
     /// @notice Quote a base amount through an approved external TWAP pool.

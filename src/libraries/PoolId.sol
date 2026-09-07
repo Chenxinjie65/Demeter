@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 /**
  * @title PoolId
  * @notice Deterministic, creator-bound identifiers for permissionless pools.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 library PoolId {
     function derive(

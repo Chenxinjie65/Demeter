@@ -8,7 +8,7 @@ import {V3OracleMath} from "src/libraries/uniswap/V3OracleMath.sol";
 /**
  * @title UniswapV3TwapOracle
  * @notice Stateless Uniswap V3 arithmetic-mean-tick quote adapter.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 contract UniswapV3TwapOracle is ITwapOracle {
     error UniswapV3TwapOracle__InvalidWindow();

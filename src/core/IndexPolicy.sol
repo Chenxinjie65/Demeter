@@ -13,7 +13,7 @@ import {RebalanceTypes} from "src/types/RebalanceTypes.sol";
  * @notice Creator-published index policies constrained by timelocked global bounds.
  * @dev Governance never approves an individual pool policy. It controls only
  * global risk limits and the set of available policy families.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 contract IndexPolicy is IIndexPolicy {
     uint256 private constant BPS = 10_000;

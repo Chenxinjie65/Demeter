@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 /**
  * @title PoolTypes
  * @notice Data structures shared by the Demeter V2 pool and registry contracts.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 library PoolTypes {
     /// @notice Whether a pool's creator may publish later policy versions.

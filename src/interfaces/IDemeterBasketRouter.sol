@@ -7,7 +7,7 @@ import {PoolTypes} from "src/types/PoolTypes.sol";
 /**
  * @title IDemeterBasketRouter
  * @notice Stateless convenience wrappers for direct in-kind issue and redeem.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 interface IDemeterBasketRouter {
     event BasketIssued(bytes32 indexed poolId, address indexed payer, address indexed receiver, uint256 sharesOut);

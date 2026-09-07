@@ -1,39 +1,70 @@
-# Demeter
+# Demeter V2
 
 [English](README.md)
 
-本仓库工作树仅包含规范的 Demeter V2 单例实现。旧 `Factory + BeaconProxy +
-per-vault` 原型仅保留在 Git 历史中，供需要时追溯；所有后续开发都在 V2 上进行。
+Demeter V2 是无需逐池许可的链上指数基金协议。任何人都可以使用全局
+`AssetRegistry` 已批准的资产创建基金，治理无需逐个批准池。
 
-## 当前方向
+## 状态
 
-Demeter V2 是链上指数基金，而不是以全部基金储备提供公开交易的 AMM：
+单例核心、测试、部署脚本和本地发布门禁已经实现。本仓库不代表生产部署授权。
+生产发布仍取决于生产链与资产选择、真实预言机和 TWAP fork 测试、治理角色验证、
+经济仿真、独立安全审查以及部署 bytecode 核验。
 
-- 单例 `DemeterManager` 托管所有池的基础资产；
-- 每个 `poolId` 对应一个可转让 ERC-20 基金份额；
-- 申购和赎回严格按实际记录储备比例执行；
-- 经时间锁生效的指数政策版本与漂移区间决定何时调仓；
-- 通过有界公开荷兰拍卖完成调仓；
-- Chainlink 是主价格锚，外部 DEX TWAP 负责交叉验证；
-- DEX 与 solver 是竞拍者的流动性来源，Manager 不持有任意路由授权。
-- 任何人都可以从协议批准的资产集合创建自己的指数基金，无需 DAO 逐池批准。
-- `DemeterBasketRouter` 只提供无 DEX、无通用调用的 in-kind 用户流程。
+## 架构
 
-## 正式文档
+- `DemeterManager` 是全部池的单例托管方和储备账本；
+- 每个池拥有 creator-bound `poolId` 和独立 ERC-20 `DemeterShare`；
+- issue 输入向上取整，redeem 输出按记录储备向下取整，赎回永不暂停；
+- `IndexPolicy` 在 Timelock 全局边界内保存延迟、append-only 的 creator 政策；
+- `AuctionRebalance` 执行有界公开荷兰拍卖，Manager 不提供公共 AMM swap、任意
+  calldata 或通用 DEX allowance；
+- Chainlink 提供主要 USD 锚，批准的外部 Uniswap V3 common-quote TWAP 负责交叉验证；
+- `DemeterBasketRouter` 只支持用户自有资金的 in-kind issue/redeem。
 
-- [V2 架构](docs/zh/ARCHITECTURE_V2_ZH.md)
-- [V2 路线图](docs/zh/ROADMAP_V2_ZH.md)
-- [V2 实施计划](docs/zh/IMPLEMENTATION_PLAN_V2_ZH.md)
+## 仓库结构
+
+```text
+src/            V2 合约、接口、类型和库
+test/v2/        单元、集成、fuzz 和 invariant 测试
+script/v2/      部署、连接、建池和发布门禁脚本
+docs/           架构、政策、运维和发布文档
+research/       非生产调仓比较工具
+```
+
+旧 V1 Factory/Beacon/Vault 原型仅保留在 Git 历史中。
+
+## 开发
+
+需要支持 Cancun EVM 的 Foundry 和 Git submodule。
+
+```bash
+git submodule update --init --recursive
+forge build
+forge test --match-path 'test/v2/**' --summary
+bash script/v2/check-format.sh
+bash script/v2/check-contract-sizes.sh
+```
+
+完整发布命令和结果要求见[发布检查清单](docs/zh/RELEASE_CHECKLIST_V2_ZH.md)。
+
+## 文档
+
+- [架构](docs/zh/ARCHITECTURE_V2_ZH.md)
+- [实施计划](docs/zh/IMPLEMENTATION_PLAN_V2_ZH.md)
 - [调仓白皮书](docs/zh/REBALANCING_WHITEPAPER_ZH.md)
-- [架构决策记录](docs/zh/DECISIONS_ZH.md)
-- [V2 发布检查清单](docs/zh/RELEASE_CHECKLIST_V2_ZH.md)
-- [V2 静态分析分类](docs/zh/STATIC_ANALYSIS_V2_ZH.md)
-- [V2 事故处理手册](docs/zh/INCIDENT_RUNBOOK_V2_ZH.md)
-- [V2 发布证据](docs/zh/RELEASE_EVIDENCE_V2_ZH.md)
+- [架构决策](docs/zh/DECISIONS_ZH.md)
+- [路线图](docs/zh/ROADMAP_V2_ZH.md)
+- [发布检查清单](docs/zh/RELEASE_CHECKLIST_V2_ZH.md)
+- [发布证据](docs/zh/RELEASE_EVIDENCE_V2_ZH.md)
+- [静态分析分类](docs/zh/STATIC_ANALYSIS_V2_ZH.md)
+- [事故处置手册](docs/zh/INCIDENT_RUNBOOK_V2_ZH.md)
+- [安全政策](SECURITY.md)
+- [贡献指南](CONTRIBUTING.md)
 
-英文原文仍是实现与安全审计的权威版本。
+英文规范是实现权威，中文镜像位于 [`docs/zh`](docs/zh/)。
 
-## 工作规则
+## 许可证
 
-实施前必须先阅读架构、白皮书和实施计划。Manager 不得提供公开 AMM
-`swap` 路径，也不得执行任意 DEX calldata。
+Demeter 自有代码使用 [MIT License](LICENSE)。派生自 Uniswap 的数学文件保留其
+GPL 许可证头，第三方依赖遵循各自的上游许可证。

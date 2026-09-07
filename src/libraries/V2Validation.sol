@@ -6,7 +6,7 @@ import {V2Errors} from "src/libraries/V2Errors.sol";
 /**
  * @title V2Validation
  * @notice Pure calldata validation helpers shared by V2 entry points.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 library V2Validation {
     uint256 internal constant BPS = 10_000;

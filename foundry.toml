@@ -6,13 +6,13 @@ solc = "0.8.33"
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 
-# via-IR 优化器；80 runs keeps the immutable auction module under its reviewed
+# The via-IR optimizer with 80 runs keeps the immutable auction module under its reviewed
 # runtime-size budget while retaining optimizer coverage for production builds.
 optimizer = true
 optimizer_runs = 80
 via_ir = true
 
-# 必须设置为 cancun，否则 EIP-1153 (瞬态存储 TSTORE) 无法编译！
+# Cancun is required because the core uses EIP-1153 transient storage.
 evm_version = "cancun"
 
 [rpc_endpoints]

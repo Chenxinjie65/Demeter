@@ -6,7 +6,7 @@ import {PoolTypes} from "src/types/PoolTypes.sol";
 /**
  * @title IAssetRegistry
  * @notice Read and governance surfaces for approved V2 assets.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 interface IAssetRegistry {
     event AssetConfigured(address indexed asset, uint64 indexed configVersion, bool enabled);

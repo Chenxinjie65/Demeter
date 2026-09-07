@@ -7,7 +7,7 @@ import {V2Errors} from "src/libraries/V2Errors.sol";
 /**
  * @title ProportionalMath
  * @notice Full-precision reserve and share calculations for Demeter V2.
- * @custom:security-contact security@demeter.protocol
+ * @custom:security-contact https://github.com/Chenxinjie65/Demeter/security/advisories/new
  */
 library ProportionalMath {
     uint256 internal constant BPS = 10_000;
