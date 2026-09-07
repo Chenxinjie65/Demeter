@@ -51,6 +51,11 @@ jobs:
           forge test -vvv
         id: test
 
+      - name: Run focused V2 tests
+        run: |
+          forge test --match-path 'test/v2/**' -vv
+        id: v2-test
+
       - name: Run V2 release invariants
         env:
           FOUNDRY_PROFILE: release
