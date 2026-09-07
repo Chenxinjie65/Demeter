@@ -27,6 +27,8 @@ interface IDemeterBasketRouter {
     /**
      * @notice Issue shares by supplying the exact proportional basket.
      * @dev Basket assets are pulled from the caller and never from the manager.
+     * @param params Pool, share amount, receiver, deadline, and per-asset max inputs.
+     * @return amountsIn Exact native-unit basket amounts transferred from the caller.
      */
     function issue(PoolTypes.IssueParams calldata params) external returns (uint256[] memory amountsIn);
 
@@ -34,6 +36,8 @@ interface IDemeterBasketRouter {
      * @notice Redeem caller-owned shares for the proportional basket.
      * @dev The caller must approve this router to spend the share token. Basket
      * assets are transferred directly from the manager to `params.receiver`.
+     * @param params Pool, share owner, share amount, receiver, deadline, and minimum outputs.
+     * @return amountsOut Exact native-unit basket amounts transferred to the receiver.
      */
     function redeem(PoolTypes.RedeemParams calldata params) external returns (uint256[] memory amountsOut);
 }

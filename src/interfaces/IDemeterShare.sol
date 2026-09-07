@@ -16,8 +16,13 @@ interface IDemeterShare is IERC20 {
     function manager() external view returns (address);
 
     /// @notice Mint shares; callable only by the immutable Manager.
+    /// @param to Account receiving the newly issued shares.
+    /// @param amount Raw 18-decimal share amount to mint.
     function mint(address to, uint256 amount) external;
 
     /// @notice Burn owner shares using an owner allowance or Manager authority.
+    /// @param owner Account whose shares are destroyed.
+    /// @param operator Caller authorized by the owner allowance, or the Manager.
+    /// @param amount Raw 18-decimal share amount to burn.
     function burnFrom(address owner, address operator, uint256 amount) external;
 }

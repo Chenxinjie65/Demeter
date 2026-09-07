@@ -13,6 +13,7 @@ interface ITwapOracle {
     /// @param quoteToken Quote token in native units.
     /// @param baseAmount Amount of baseToken to quote.
     /// @param secondsAgo TWAP observation window in seconds.
+    /// @return quoteAmount Amount of quoteToken, normalized to its native decimals.
     function quote(address pool, address baseToken, address quoteToken, uint256 baseAmount, uint32 secondsAgo)
         external
         view

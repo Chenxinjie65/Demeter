@@ -52,15 +52,21 @@ interface IDemeterManager {
     ) external;
 
     /// @notice Set the auction module once, before any pool exists.
+    /// @param authority Fixed AuctionRebalance contract authorized to settle bids.
     function setAuctionRebalance(address authority) external;
 
     /// @notice Set the index-policy module once, before any pool exists.
+    /// @param policy Fixed IndexPolicy contract authorized to validate policies.
     function setIndexPolicy(address policy) external;
 
     /// @notice Return the creator recorded for a pool.
+    /// @param poolId Pool identifier.
+    /// @return creator Original permissionless pool creator.
     function poolCreator(bytes32 poolId) external view returns (address);
 
     /// @notice Return the ERC-20 share address for a pool.
+    /// @param poolId Pool identifier.
+    /// @return share CREATE2-deployed DemeterShare address.
     function poolShare(bytes32 poolId) external view returns (address);
 
     /// @notice Return the immutable, strictly sorted asset list for a pool.
@@ -73,9 +79,14 @@ interface IDemeterManager {
     function getSeedAmounts(bytes32 poolId) external view returns (uint256[] memory amounts);
 
     /// @notice Return a pool's recorded reserve in native token units.
+    /// @param poolId Pool identifier.
+    /// @param asset Approved constituent asset.
+    /// @return reserve Recorded reserve held for the pool.
     function reserveOf(bytes32 poolId, address asset) external view returns (uint256);
 
     /// @notice Return the aggregate recorded reserve for an asset across all pools.
+    /// @param asset Approved asset.
+    /// @return reserve Sum of all live pool reserves for the asset.
     function accountedReserve(address asset) external view returns (uint256);
 
     /// @notice Return the one-time configured auction authority.
@@ -85,21 +96,33 @@ interface IDemeterManager {
     function indexPolicy() external view returns (address);
 
     /// @notice Return the Manager's actual token balance for an asset.
+    /// @param asset ERC-20 token queried.
+    /// @return balance Manager wallet balance in native units.
     function tokenBalance(address asset) external view returns (uint256);
 
     /// @notice True for a live pool only while no Manager asset operation is executing.
+    /// @param poolId Pool identifier.
+    /// @return active True when the pool exists, is open, and no guarded operation is active.
     function isPoolActive(bytes32 poolId) external view returns (bool);
 
     /// @notice Exposes the Manager's transient operation guard to fixed protocol modules.
     function isOperationActive() external view returns (bool);
 
     /// @notice Return whether a pool has reached its terminal closed state.
+    /// @param poolId Pool identifier.
+    /// @return closed True after full redemption or bootstrap expiry.
     function isPoolClosed(bytes32 poolId) external view returns (bool);
 
     /// @notice Quote proportional issue inputs, rounded up per asset.
+    /// @param poolId Pool identifier.
+    /// @param sharesOut Raw 18-decimal share amount to issue.
+    /// @return amountsIn Required native-unit inputs in immutable pool asset order.
     function quoteIssue(bytes32 poolId, uint256 sharesOut) external view returns (uint256[] memory amountsIn);
 
     /// @notice Quote proportional redemption outputs, rounded down per asset.
+    /// @param poolId Pool identifier.
+    /// @param sharesIn Raw 18-decimal share amount to redeem.
+    /// @return amountsOut Native-unit outputs in immutable pool asset order.
     function quoteRedeem(bytes32 poolId, uint256 sharesIn) external view returns (uint256[] memory amountsOut);
 
     /// @notice Validate that an asset pair belongs to a live pool and is enabled.
