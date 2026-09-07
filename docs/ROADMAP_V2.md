@@ -150,14 +150,12 @@ Mandatory categories:
 
 ## 5. Research and Rollout Requirements
 
-The existing simulator is historical research, not execution evidence. Before
-the first production pool it must model:
-
-- intraday price paths and auction fill latency;
-- partial and failed fills;
-- auction price bands and oracle invalidation;
-- gas, DEX hedge cost, and bidder competition assumptions;
-- AUM-scaled lot limits and asset-specific liquidity limits.
+The deterministic V2 model covers auction latency, partial and failed fills,
+price bands, oracle/configuration invalidation, gas, hedge cost, and aggregate
+liquidity limits. It remains research rather than execution evidence. Before the
+first production pool it must be calibrated with intraday target-chain data,
+pairwise venue depth, real oracle observations, bidder competition, MEV, and
+asset-specific AUM-scaled limits.
 
 Production rollout begins with an operational small AUM soft cap, few highly liquid assets, and
 one auction at a time. Increasing the cap requires observed fill-quality and

@@ -56,6 +56,13 @@ bash script/v2/check-contract-sizes.sh
 The complete release commands and required outcomes are in the
 [release checklist](docs/RELEASE_CHECKLIST_V2.md).
 
+The deterministic V2 policy comparison can be reproduced with:
+
+```bash
+python3 -m unittest research.rebalancing_study.test_v2_model -v
+python3 -m research.rebalancing_study.v2_compare
+```
+
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE_V2.md)

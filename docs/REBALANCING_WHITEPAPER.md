@@ -382,16 +382,15 @@ governance surface.
 
 ## 11. Research Agenda
 
-Before deployment, the simulator must be extended beyond daily equilibrium
-approximations to include:
+The deterministic V2 comparison now covers policy trigger variants, uniform
+plan scaling, opening delay, bounded curve progression, partial and zero fills,
+expiry, oracle interruptions, configuration invalidation, hedge cost, gas, and
+liquidity-limited execution. It is reproducible through
+`research.rebalancing_study.v2_compare`.
 
-- intraday prices, volatility, and oracle update latency;
-- auction opening delay, partial fills, and zero-fill outcomes;
-- bidder hedge cost, gas, and competing bid behavior;
-- Chainlink/TWAP disagreement and cancellation frequency;
-- AUM-scaled lot limits for each approved asset;
-- stress scenarios where one constituent loses DEX liquidity or a price feed is
-  unavailable.
+Before deployment, research must still add calibrated intraday paths, live
+Chainlink and Uniswap observations, pairwise auction ordering, competing bidder
+behavior, MEV, chain-specific gas, and AUM-scaled depth for each approved asset.
 
 The selected method is relatively optimal only under the fund's stated
 objective: explicit bounded execution cost, open competition, and no arbitrary

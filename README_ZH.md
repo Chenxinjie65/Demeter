@@ -48,6 +48,13 @@ bash script/v2/check-contract-sizes.sh
 
 完整发布命令和结果要求见[发布检查清单](docs/zh/RELEASE_CHECKLIST_V2_ZH.md)。
 
+可通过以下命令复现确定性的 V2 政策对比：
+
+```bash
+python3 -m unittest research.rebalancing_study.test_v2_model -v
+python3 -m research.rebalancing_study.v2_compare
+```
+
 ## 文档
 
 - [架构](docs/zh/ARCHITECTURE_V2_ZH.md)

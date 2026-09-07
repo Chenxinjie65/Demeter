@@ -56,6 +56,10 @@ jobs:
           forge test --match-path 'test/v2/**' -vv
         id: v2-test
 
+      - name: Run deterministic V2 research tests
+        run: |
+          python3 -m unittest research.rebalancing_study.test_v2_model -v
+
       - name: Run V2 release invariants
         env:
           FOUNDRY_PROFILE: release
