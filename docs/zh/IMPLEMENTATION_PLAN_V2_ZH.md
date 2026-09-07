@@ -13,7 +13,7 @@
 
 1. 修改 V2 代码前阅读英文 `ARCHITECTURE_V2.md`、`REBALANCING_WHITEPAPER.md`
    和本计划；中文版本用于理解，英文版本是实现权威来源。
-2. V2 功能切片不得顺手重写或删除 legacy 合约；新代码放在 V2 路径中。
+2. 工作树保持 V2-only；legacy 合约仅保留在历史 Git 提交中，新代码不得重新引入旧路径。
 3. 使用 Solidity `^0.8.24`、Foundry、自定义 error 和完整英文 NatSpec；正式规范
    使用英文，并在 `docs/zh/` 维护同步中文镜像。
 4. 每个切片必须包含实现、聚焦单测、与风险相称的 fuzz/invariant 测试、

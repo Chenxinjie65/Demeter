@@ -2,9 +2,8 @@
 
 [English](README.md)
 
-本仓库同时包含两套实现：现有的 `Factory + BeaconProxy + per-vault`
-原型，以及当前唯一的 V2 方向 `redesign_v2_singleton`。旧实现仅作为测试、
-迁移和经验参考；所有新开发必须遵循 V2 规范。
+本仓库工作树仅包含规范的 Demeter V2 单例实现。旧 `Factory + BeaconProxy +
+per-vault` 原型仅保留在 Git 历史中，供需要时追溯；所有后续开发都在 V2 上进行。
 
 ## 当前方向
 
