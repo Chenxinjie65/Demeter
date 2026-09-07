@@ -11,3 +11,17 @@ out/
 
 # Dotenv file
 .env
+
+# Local environment variants and signing material
+.env.*
+!.env.example
+
+# Python and simulator output
+__pycache__/
+*.py[cod]
+.matplotlib/
+research/rebalancing_study/data/
+research/rebalancing_study/output/
+
+# Local agent runtime mount
+.codex
