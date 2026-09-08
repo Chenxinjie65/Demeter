@@ -11,7 +11,7 @@ compares:
 
 - buy and hold;
 - immediate calendar direct swaps as a non-protocol benchmark;
-- immediate drift-triggered direct swaps as a non-protocol benchmark;
+- immediate calendar-plus-drift direct swaps as a non-protocol benchmark;
 - conservative, balanced, and responsive V2 bounded-auction policies.
 
 Each V2 policy runs under:
@@ -27,7 +27,7 @@ The V2 model implements the research equivalents of:
 - calendar and drift triggers;
 - minimum plan intervals;
 - uniform scaling under plan turnover and per-asset adjustment caps;
-- auction opening delay and plan expiry;
+- separate auction opening delay, auction duration, and plan expiry bounds;
 - start-premium to maximum-discount price progression;
 - daily partial-fill and external-liquidity limits;
 - fail-closed oracle days;

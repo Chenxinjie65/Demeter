@@ -60,6 +60,7 @@ def policy_matrix() -> tuple[AuctionPolicy, ...]:
         "min_plan_interval_days": 7,
         "plan_duration_days": 7,
         "opening_delay_days": 1,
+        "auction_duration_days": 6,
         "max_turnover_bps": 2_000.0,
         "max_asset_adjustment_bps": 1_000.0,
         "start_premium_bps": 25.0,
@@ -131,7 +132,12 @@ def run_comparison(days: int = 365, initial_aum_usd: float = INITIAL_AUM_USD) ->
             "Calendar Direct Swap", path, schedule, initial_aum_usd, trigger_bps=None, cost_bps=35.0
         ),
         simulate_direct_rebalance(
-            "Drift Direct Swap", path, schedule, initial_aum_usd, trigger_bps=175.0, cost_bps=35.0
+            "Calendar + Drift Direct Swap",
+            path,
+            schedule,
+            initial_aum_usd,
+            trigger_bps=175.0,
+            cost_bps=35.0,
         ),
     ]
     for policy in policy_matrix():

@@ -52,6 +52,7 @@ class AuctionPolicy:
     min_plan_interval_days: int
     plan_duration_days: int
     opening_delay_days: int
+    auction_duration_days: int
     max_turnover_bps: float
     max_asset_adjustment_bps: float
     start_premium_bps: float
@@ -60,10 +61,15 @@ class AuctionPolicy:
     def __post_init__(self) -> None:
         if not 0.0 <= self.destination_bps < self.trigger_bps:
             raise ValueError("Destination drift must be below trigger drift.")
-        if self.min_plan_interval_days < 0 or self.opening_delay_days < 0 or self.plan_duration_days <= 0:
+        if (
+            self.min_plan_interval_days < 0
+            or self.opening_delay_days < 0
+            or self.auction_duration_days <= 0
+            or self.plan_duration_days <= 0
+        ):
             raise ValueError("Policy timing values are invalid.")
-        if self.opening_delay_days > self.plan_duration_days:
-            raise ValueError("Opening delay cannot exceed plan duration.")
+        if self.opening_delay_days + self.auction_duration_days > self.plan_duration_days:
+            raise ValueError("The plan must contain the complete auction window.")
         for value in (
             self.max_turnover_bps,
             self.max_asset_adjustment_bps,
@@ -95,6 +101,7 @@ class ExecutionStress:
 class Plan:
     opened_day: int
     auction_start_day: int
+    auction_end_day: int
     expires_day: int
     target_units: list[float]
     target_weights: list[float]
@@ -229,7 +236,7 @@ class AuctionSimulator:
                     metrics.plans_invalidated += 1
                     metrics.invalidated_unfilled_usd += plan.remaining_turnover_usd
                     plan = None
-                elif day > plan.expires_day:
+                elif day > plan.auction_end_day or day > plan.expires_day:
                     metrics.plans_expired += 1
                     metrics.expired_unfilled_usd += plan.remaining_turnover_usd
                     plan = None
@@ -245,6 +252,9 @@ class AuctionSimulator:
                     plan = Plan(
                         opened_day=day,
                         auction_start_day=day + self.policy.opening_delay_days,
+                        auction_end_day=(
+                            day + self.policy.opening_delay_days + self.policy.auction_duration_days
+                        ),
                         expires_day=day + self.policy.plan_duration_days,
                         target_units=target_units,
                         target_weights=target,
@@ -312,7 +322,7 @@ class AuctionSimulator:
         gross_value = portfolio_value(gross_units, prices)
         gross_units = [unit * pre_value / gross_value for unit in gross_units]
 
-        auction_days = max(plan.expires_day - plan.auction_start_day, 1)
+        auction_days = max(plan.auction_end_day - plan.auction_start_day, 1)
         progress = min(max((day - plan.auction_start_day) / auction_days, 0.0), 1.0)
         curve_discount = -self.policy.start_premium_bps + progress * (
             self.policy.start_premium_bps + self.policy.max_discount_bps

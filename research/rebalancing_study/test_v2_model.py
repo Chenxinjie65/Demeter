@@ -27,6 +27,7 @@ class V2ModelTest(unittest.TestCase):
             min_plan_interval_days=1,
             plan_duration_days=3,
             opening_delay_days=0,
+            auction_duration_days=3,
             max_turnover_bps=2_000.0,
             max_asset_adjustment_bps=1_000.0,
             start_premium_bps=20.0,
@@ -60,6 +61,7 @@ class V2ModelTest(unittest.TestCase):
             min_plan_interval_days=100,
             plan_duration_days=3,
             opening_delay_days=0,
+            auction_duration_days=3,
             max_turnover_bps=2_000.0,
             max_asset_adjustment_bps=1_000.0,
             start_premium_bps=20.0,
@@ -80,6 +82,7 @@ class V2ModelTest(unittest.TestCase):
             min_plan_interval_days=100,
             plan_duration_days=3,
             opening_delay_days=0,
+            auction_duration_days=3,
             max_turnover_bps=2_000.0,
             max_asset_adjustment_bps=1_000.0,
             start_premium_bps=20.0,
@@ -120,6 +123,22 @@ class V2ModelTest(unittest.TestCase):
         self.assertEqual(len(path), 365)
         self.assertTrue(all(len(row) == 4 for row in path))
         self.assertEqual(sorted(schedule), [0, 90, 180, 270])
+
+    def test_policy_rejects_auction_outside_plan_window(self) -> None:
+        with self.assertRaises(ValueError):
+            AuctionPolicy(
+                name="Invalid",
+                trigger_bps=100.0,
+                destination_bps=25.0,
+                min_plan_interval_days=1,
+                plan_duration_days=3,
+                opening_delay_days=1,
+                auction_duration_days=3,
+                max_turnover_bps=2_000.0,
+                max_asset_adjustment_bps=1_000.0,
+                start_premium_bps=20.0,
+                max_discount_bps=100.0,
+            )
 
     def test_buy_and_hold_never_rebalances(self) -> None:
         prices = [[1.0, 1.0], [2.0, 1.0], [3.0, 1.0]]
