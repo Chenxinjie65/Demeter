@@ -18,7 +18,6 @@ out/
 __pycache__/
 *.py[cod]
 .matplotlib/
-research/rebalancing_study/data/
 research/rebalancing_study/output/
 
 # Local agent runtime mount

@@ -63,11 +63,10 @@ useful for a market-making pool or a liquidity bootstrapping pool, but it means
 fund holders are the counterparty to the adjustment.
 
 For a fund, the resulting cost is not merely a visible swap fee. It includes
-adverse selection and invariant repricing loss. The previous Demeter research
-model labels this cost as implicit loss; its historical outputs show that
-passive-swap and passive-damped outcomes are highly parameter- and
-market-regime-sensitive. Those results are evidence to reject the model as a
-default, not evidence to tune it for production.
+adverse selection and invariant repricing loss. Passive-swap and passive-damped
+outcomes are also highly parameter- and market-regime-sensitive. These
+properties reject the model as a default; they are not parameters to tune for
+production.
 
 Therefore Demeter does not use:
 

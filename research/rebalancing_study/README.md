@@ -1,6 +1,6 @@
 # Demeter V2 Rebalancing Research
 
-This workspace contains two complementary comparison tools. Neither is
+This workspace contains the deterministic V2 policy comparison tool. It is not
 production execution evidence.
 
 ## V2 Policy Comparison
@@ -50,23 +50,6 @@ research/rebalancing_study/output/v2_strategy_comparison/report.md
 research/rebalancing_study/output/v2_strategy_comparison/aum_scaling.csv
 research/rebalancing_study/output/v2_strategy_comparison/aum_scaling.md
 ```
-
-## Historical Market Comparison
-
-`simulate.py` compares buy-and-hold, rejected passive-AMM approaches, a simple
-full-fill Dutch auction, and manager-directed swaps over cached daily market
-data. It remains useful for understanding why the public-AMM alternatives were
-rejected, but it is not the canonical V2 lifecycle model.
-
-Install optional plotting dependencies and run it with:
-
-```bash
-python3 -m pip install -r research/rebalancing_study/requirements.txt
-python3 -m research.rebalancing_study.simulate
-```
-
-It fetches public daily data from CoinGecko with a Yahoo Finance fallback and
-writes CSV, Markdown, and PNG output below `research/rebalancing_study/output/`.
 
 ## Interpretation Rules
 
